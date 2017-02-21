@@ -1,1 +1,3 @@
-# preliminary_aircraft_design_calculations
+# Preliminary Aircraft Design Calculations
+
+This code is currently under development.
