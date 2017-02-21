@@ -61,7 +61,7 @@ w_fuel_mission = (wto - (wto*weight_ratio));
 w_fuel = w_fuel_mission * 1.06;
 raymer = wto.*(1-(1.02*wto.^(-0.06))) - w_fuel_mission - W_pay;
 r = 0.*wto;
-m = InterXmodified([wto;r],[wto;raymer]);
+m = InterX([wto;r],[wto;raymer]);
 if graph == 1
     figure()
     hold on;
