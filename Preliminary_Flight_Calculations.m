@@ -2,7 +2,7 @@
 %% Bernardo Pacini                                                       %%
 %% MAE 332 - Aircraft Design                                             %%
 %% Preliminary Design Calculations                                       %%
-%% Feb. 20, 2017 Mon                                                     %%
+%% Feb. 21, 2017 Mon                                                     %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Description: This code will output preliminary aircraft design        %%
 %% calculations to a .txt file.                                          %%
