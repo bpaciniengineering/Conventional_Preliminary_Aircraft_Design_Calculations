@@ -7,7 +7,7 @@
 %% Description: This code will output preliminary aircraft design        %%
 %% calculations to a .txt file.                                          %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Dependencies: | aircraft_mass.m | atmos.m | InterXmodified.m |        %%
+%% Dependencies: | aircraft_mass.m | atmos.m |                           %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 close all;
 clear all;
@@ -22,19 +22,19 @@ cd(folder_name);
 Trial_Name  = 'Trial 1' ;
 Description = ''        ;
 
-M_cruise    = 0.85      ; 
-R           = 3600      ; %nm
-AR          = 8         ; %assume about 8                       %ESTIMATE
-tsfc        = 0.605       ; %0.45<=tsfc<=1.2 - check engine manufacturer
+M_cruise    = 0.85       ; 
+R           = 3500      ; %nm
+AR          = 9         ; %assume about 8                       %ESTIMATE
+tsfc        = 0.605     ; %0.45<=tsfc<=1.2 - check engine manufacturer
 altitude    = 35000     ; %ft
-passengers  = 200       ; %persons
+passengers  = 180         ; %persons
 crew        = 6         ; %persons
 baggage     = 50        ; %lbs allotment passenger or crew
 loiter_dur  = 0         ; %sec
 
 V_stall     = 137       ; %knots
-Clmax       = 1.5       ;      %assumed
-L_runway    = 7000      ;    %assumed
+Clmax       = 1.5       ; %assumed
+L_runway    = 7000      ; %assumed
 
 weight_max  = 1e6       ; %max of weight range
 graph       = 1         ; %1/0 for plot on/off
