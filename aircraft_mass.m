@@ -56,17 +56,16 @@ weight_ratio = ratio_startup* ratio_climb * ratio_CO * ...
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% PLOTTING
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-wto = linspace(1, weight_max, 1000);
-w_fuel_mission = (wto - (wto*weight_ratio));
-w_fuel = w_fuel_mission * 1.06;
-raymer = wto.*(1-(1.02*wto.^(-0.06))) - w_fuel_mission - W_pay;
-r = 0.*wto;
-m = InterX([wto;r],[wto;raymer]);
+w = linspace(1, weight_max, 1000);
+raymer = @(wto) wto*(1-(1.02*wto^(-0.06))) - ...
+    (wto - (wto*weight_ratio))*1.06 - W_pay;
+x0 = [1 weight_max];
+W_TO = fzero(raymer, x0);
 if graph == 1
     figure()
     hold on;
-    plot(wto, wto.*(1-(1.02*wto.^(-0.06))) - w_fuel_mission- W_pay);
-    plot(m(1,1), m(2,1),'r*');
+    plot(w, w.*(1-(1.02*w.^(-0.06))) - 1.06*(w-(w.*weight_ratio))-W_pay);
+    plot(W_TO,0,'r*');
     title('Raymer Equation')
     xlabel('Weight (lbs)');
     ylabel('N/A');
@@ -74,7 +73,6 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % FINAL WEIGHT VALUES
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-W_TO = m(1,1);
-W_fuel = (W_TO - (W_TO*weight_ratio));
+W_fuel = 1.06*(W_TO - (W_TO*weight_ratio));
 W_empty = W_TO - W_fuel - W_pay;
 end
