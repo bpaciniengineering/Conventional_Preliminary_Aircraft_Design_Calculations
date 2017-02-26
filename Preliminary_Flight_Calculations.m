@@ -2,12 +2,12 @@
 %% Bernardo Pacini                                                       %%
 %% MAE 332 - Aircraft Design                                             %%
 %% Preliminary Design Calculations                                       %%
-%% Feb. 21, 2017 Mon                                                     %%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Feb. 23, 2017 Thur                                                    %%
+%%                                                                       %%
 %% Description: This code will output preliminary aircraft design        %%
 %% calculations to a .txt file.                                          %%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Dependencies: | aircraft_mass.m | atmos.m |                           %%
+%%                                                                       %%
+%% Extra Dependencies: | aircraft_mass.m | atmos.m |                     %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 close all;
 clear all;
@@ -22,22 +22,25 @@ cd(folder_name);
 Trial_Name  = 'Trial 1' ;
 Description = ''        ;
 
-M_cruise    = 0.85       ; 
-R           = 3500      ; %nm
-AR          = 9         ; %assume about 8                       %ESTIMATE
-tsfc        = 0.605     ; %0.45<=tsfc<=1.2 - check engine manufacturer
+M_cruise    = 0.85      ; 
+R           = 2500      ; %nm
+AR          = 8         ; %assume about 8                       %ESTIMATE
+tsfc        = 0.7       ; %0.45<=tsfc<=1.2 - check engine manufacturer
 altitude    = 35000     ; %ft
-passengers  = 180         ; %persons
-crew        = 6         ; %persons
-baggage     = 50        ; %lbs allotment passenger or crew
+passengers  = 210       ; %persons
+crew        = 0         ; %persons
+baggage     = [4000 1]  ; %lbs, 0-crew/passenger allotment/1-total payload
 loiter_dur  = 0         ; %sec
-
-V_stall     = 137       ; %knots
-Clmax       = 1.5       ; %assumed
-L_runway    = 7000      ; %assumed
 
 weight_max  = 1e6       ; %max of weight range
 graph       = 1         ; %1/0 for plot on/off
+
+V_stall     = 137       ; %knots
+V_approach  = 150       ; %knots
+Clmax       = 1.5       ; %assumed
+L_takeoff   = 10500     ; %ft REQUIREMENT
+L_landing   = 3600      ; %ft REQUIREMENT
+rate_climb  = 3500      ; %ft/min
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%DO NOT MODIFY BELOW THIS POINT%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -52,11 +55,13 @@ disp(sprintf('%0.0f Takeoff Weight', W_TO));
 disp(sprintf('%0.0f Fuel Weight', W_fuel));
 disp(sprintf('%0.0f Empty Weight', W_empty));
 
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Surface Area
-%[] = aircraft_surfacearea();
-altitude = altitude*0.3048;
-[airDens, airPres, temp, soundSpeed] = Atmos(altitude);%kg/m^3 N/m^2 K m/s
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+alt = altitude*0.3048;
+[airDens, airPres, temp, soundSpeed] = Atmos(alt);%kg/m^3 N/m^2 K m/s
 % Convert values from SI to Imperial
 airDens    = airDens * 0.0624;       %lb/ft^3
 airPres    = airPres * 0.000145038;  %PSI
@@ -78,24 +83,57 @@ WS_stall = ((V_stall^2)*airDens_sl*Clmax)/(2*32.174);
 % Take-off
 WS = linspace(1,200);
 TW_takeoff = ((20.9.*WS)/(sigma*Clmax)).*...
-    (L_runway-69.6.*(WS./(sigma*Clmax)).^(.5)).^(-1);
+    (L_takeoff-69.6.*(WS./(sigma*Clmax)).^(.5)).^(-1);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Constant Cruise Flight
+% beta = 
+% alpha =
+% k1 = 
+% k2 = 
+q = dynamic_viscosity(alt);
+
+% TW_CCF = (beta/alpha)*(k1*(beta/q)*WS + k2 + (CD_O + CD_R)/((beta/q)*WS));
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Climb-performance
+% beta = 
+% alpha =
+% k1 = 
+% k2 = 
+q = dynamic_viscosity(alt);
+dHdt = rate_climb;
+
+%TW_CP = (beta/alpha)*(k1*(beta/q)*WS + k2 + (CD_O + CD_R)/((beta/q)*WS)...
+ %   + (1/V)*(dHdt));
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Cruise-performance
+% beta = 
+% alpha =
+% k1 = 
+% k2 = 
+% R = 
+g = 32; %ft/s^2
+q = dynamic_viscosity(alt);
+%n = sqrt(1 + ((V^2))/g*R);
+
+%TW_CLT = (beta/alpha)*(k1*n^2*(beta/q)*WS + k2*n + ...
+  % (CD_O + CD_R)/((beta/q)*WS));
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Landing
+%SL = 
+%theta = 
+
+%WS_landing = ((sigma * Clmax)/(79.4)) *(SL  - 50/tan(theta))
 
 plot(WS, TW_takeoff);
 title('Constraint Plane (T/W - W/S)');
 xlabel('Wing Loading [W_g/S], lb/ft^2');
 ylabel('Thrust Loading [T_0/W_g]');
 line([WS_stall WS_stall],get(hax,'YLim'),'Color',[1 0 0]);
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Climb-performance
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Cruise-performance
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Landing
-
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
