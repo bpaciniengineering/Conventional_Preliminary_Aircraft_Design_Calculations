@@ -25,19 +25,14 @@ Description = ''        ;
 M_cruise    = 0.85       ; 
 R           = 2500      ; %nm
 AR          = 8         ; %assume about 8                       %ESTIMATE
+e           = 0.8       ; %Oswald efficiency factor, assume 0.8 (Raymer 92)
 tsfc        = 0.7       ; %0.45<=tsfc<=1.2 - check engine manufacturer
 altitude_c  = 35000     ; %cruise altitude, ft
 altitude_f  = 0         ; % airfield alitude, ft
-passengers  = 210         ; %persons
+passengers  = 210       ; %persons
 crew        = 6         ; %persons
 baggage     = [4000 1]  ; %lbs allotment passenger or crew
 loiter_dur  = 0         ; %sec
-
-V_stall     = 137       ; %knots
-Clmax       = 1.5       ; %assumed
-s_TO        = 7000      ; %assumed, ft
-s_L         = 0.7*s_TO  ; %assumed, see requirements, ft
-theta_app   = 3         ; %approach angle, deg
 
 weight_max  = 1e6       ; %max of weight range
 graph       = 1         ; %1/0 for plot on/off
@@ -48,6 +43,13 @@ Clmax       = 1.8       ; %assumed
 L_takeoff   = 10500     ; %ft REQUIREMENT
 L_landing   = 3600      ; %ft REQUIREMENT
 rate_climb  = 3500      ; %ft/min
+theta_app   = 3         ; %approach angle, deg
+
+% cruise parameters
+C_D0_c  = 0.02          ; % assumed (at cruise)
+C_DR_c  = 0             ; % assumed (clean configuration at cruise)
+K1_c    = 1/(pi*AR*e)   ; % induced drag correction factor
+K2_c    = 0             ; % viscous drag correction factor
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%DO NOT MODIFY BELOW THIS POINT%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -127,14 +129,31 @@ dHdt = rate_climb;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Cruise-performance
-% beta = 
-% alpha =
-% k1 = 
-% k2 = 
-% R = 
-g = 32; %ft/s^2
+% ISSUE 1: some of this is copied from aircraft_mass.m
+% Solution 1: Think about restructuring the architecture to use code more efficiently
+% ISSUE 2: converting in and out of imperial is annoying
+% Solution 2: Have 2 sets of variables to avoid unnecessary conversions
+
+g = 32.174; %ft/s^2
 q = dynamic_viscosity(alt);
-%n = sqrt(1 + ((V^2))/g*R);
+alpha_c = ((airDens_c/0.0624) / 1.225) * ...
+    (1 - exp((altitude_c - 18000) / 2000)); % from Prof. Stengel
+if M_cruise < 1
+    L_D = AR + 10;
+else
+    L_D = 11/sqrt(M_cruise);
+end
+% Breguet Range Equation
+% R = (V/tsfc) * (L_D) * ln(Wi/Wf) %lbfuel/h/lbt
+V_c = (soundSpeed_c/2.23694)*M_cruise;
+beta_c = 1/(exp(R*((tsfc)/(V_c))/(L_D)));
+
+TW_cruise = (beta_c/alpha_c)*(K1_c*beta_c*WS/q + K2_c + ...
+    (C_D0_c+C_DR_c)./(beta_c*WS/q));
+
+plot(WS, TW_cruise);
+
+%n = sqrt(1 + ((V^2))/g*R); % - here we assume n = 1 (no turning)
 
 %TW_CLT = (beta/alpha)*(k1*n^2*(beta/q)*WS + k2*n + ...
   % (CD_O + CD_R)/((beta/q)*WS));
