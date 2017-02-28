@@ -22,15 +22,22 @@ cd(folder_name);
 Trial_Name  = 'Trial 1' ;
 Description = ''        ;
 
-M_cruise    = 0.85      ; 
+M_cruise    = 0.85       ; 
 R           = 2500      ; %nm
 AR          = 8         ; %assume about 8                       %ESTIMATE
 tsfc        = 0.7       ; %0.45<=tsfc<=1.2 - check engine manufacturer
-altitude    = 35000     ; %ft
-passengers  = 210       ; %persons
-crew        = 0         ; %persons
-baggage     = [4000 1]  ; %lbs, 0-crew/passenger allotment/1-total payload
+altitude_c  = 35000     ; %cruise altitude, ft
+altitude_f  = 0         ; % airfield alitude, ft
+passengers  = 210         ; %persons
+crew        = 6         ; %persons
+baggage     = [4000 1]  ; %lbs allotment passenger or crew
 loiter_dur  = 0         ; %sec
+
+V_stall     = 137       ; %knots
+Clmax       = 1.5       ; %assumed
+s_TO        = 7000      ; %assumed, ft
+s_L         = 0.7*s_TO  ; %assumed, see requirements, ft
+theta_app   = 3         ; %approach angle, deg
 
 weight_max  = 1e6       ; %max of weight range
 graph       = 1         ; %1/0 for plot on/off
@@ -49,7 +56,7 @@ rate_climb  = 3500      ; %ft/min
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Take-off Weight
 [W_TO, W_fuel, W_empty] = aircraft_mass(M_cruise, R, AR, tsfc,...
-    altitude, passengers, crew, baggage, loiter_dur, weight_max, graph);
+    altitude_c, passengers, crew, baggage, loiter_dur, weight_max, graph);
 
 disp(sprintf('%0.0f Takeoff Weight', W_TO)); 
 disp(sprintf('%0.0f Fuel Weight', W_fuel));
@@ -59,31 +66,42 @@ disp(sprintf('%0.0f Empty Weight', W_empty));
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Surface Area
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-alt = altitude*0.3048;
-[airDens, airPres, temp, soundSpeed] = Atmos(alt);%kg/m^3 N/m^2 K m/s
-% Convert values from SI to Imperial
-airDens    = airDens * 0.0624;       %lb/ft^3
-airPres    = airPres * 0.000145038;  %PSI
-temp       = (9/5)*(temp - 273) + 32; %F
-soundSpeed = soundSpeed*2.23694;     %convert to mph
+%[] = aircraft_surfacearea();
+altitude_c = altitude_c*0.3048;
+[airDens_c, airPres_c, temp_c, soundSpeed_c] = Atmos(altitude_c);%kg/m^3 N/m^2 K m/s
+[airDens_f, airPres_f, temp_f, soundSpeed_f] = Atmos(altitude_f);
 
+% Convert values from SI to Imperial
+airDens_c    = airDens_c * 0.0624;       %lb/ft^3
+airPres_c    = airPres_c * 0.000145038;  %PSI
+temp_c       = (9/5)*(temp_c - 273) + 32; %F
+soundSpeed_c = soundSpeed_c*2.23694;     %convert to mph
+airDens_f    = airDens_f * 0.0624;       %lb/ft^3
+airPres_f    = airPres_f * 0.000145038;  %PSI
+temp_f       = (9/5)*(temp_f - 273) + 32; %F
+soundSpeed_f = soundSpeed_f*2.23694;     %convert to mph
 airDens_sl = 0.0765; %air density at sea level
-sigma = airDens/airDens_sl;
+sigma = airDens_f/airDens_sl;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Stall
 figure()
 hax=axes; 
+title('Constraint Plane (T/W - W/S)');
+xlabel('Wing Loading [W_g/S], lb/ft^2');
+ylabel('Thrust Loading [T_0/W_g]');
 hold on;
 V_stall = V_stall * 1.68781; %convert to ft/s
 WS_stall = ((V_stall^2)*airDens_sl*Clmax)/(2*32.174);
-
+% Plotted later for cosmetic reasons
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Take-off
 WS = linspace(1,200);
 TW_takeoff = ((20.9.*WS)/(sigma*Clmax)).*...
     (L_takeoff-69.6.*(WS./(sigma*Clmax)).^(.5)).^(-1);
+
+plot(WS, TW_takeoff);
+line([WS_stall WS_stall],get(hax,'YLim'),'Color',[1 0 0]);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Constant Cruise Flight
@@ -124,6 +142,10 @@ q = dynamic_viscosity(alt);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Landing
+
+%WS_landing = (s_L - 50/tan(deg2rad(theta_app)))*sigma*Clmax/79.4;
+%line([WS_landing WS_landing], get(hax,'YLim'),'Color',[0 1 0]);
+
 %SL = 
 %theta = 
 
@@ -134,7 +156,6 @@ title('Constraint Plane (T/W - W/S)');
 xlabel('Wing Loading [W_g/S], lb/ft^2');
 ylabel('Thrust Loading [T_0/W_g]');
 line([WS_stall WS_stall],get(hax,'YLim'),'Color',[1 0 0]);
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % OUTPUT TO TEXT FILE
