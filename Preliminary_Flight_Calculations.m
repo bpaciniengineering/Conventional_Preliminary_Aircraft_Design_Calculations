@@ -2,7 +2,7 @@
 %% Bernardo Pacini                                                       %%
 %% MAE 332 - Aircraft Design                                             %%
 %% Preliminary Design Calculations                                       %%
-%% Feb. 23, 2017 Thur                                                    %%
+%% Feb. 27, 2017 Thur                                                    %%
 %%                                                                       %%
 %% Description: This code will output preliminary aircraft design        %%
 %% calculations to a .txt file.                                          %%
@@ -14,8 +14,8 @@ clear all;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% SELECT WORKING DIRECTORY
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-folder_name = uigetdir('C:\','Select Working Directory');
-cd(folder_name);
+%folder_name = uigetdir('C:\','Select Working Directory');
+%cd(folder_name);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% INPUT VALUES
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -44,7 +44,7 @@ graph       = 1         ; %1/0 for plot on/off
 
 V_stall     = 137       ; %knots
 V_approach  = 150       ; %knots
-Clmax       = 1.5       ; %assumed
+Clmax       = 1.8       ; %assumed
 L_takeoff   = 10500     ; %ft REQUIREMENT
 L_landing   = 3600      ; %ft REQUIREMENT
 rate_climb  = 3500      ; %ft/min
@@ -67,7 +67,7 @@ disp(sprintf('%0.0f Empty Weight', W_empty));
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Surface Area
 %[] = aircraft_surfacearea();
-altitude_c = altitude_c*0.3048;
+alt = altitude_c*0.3048;
 [airDens_c, airPres_c, temp_c, soundSpeed_c] = Atmos(altitude_c);%kg/m^3 N/m^2 K m/s
 [airDens_f, airPres_f, temp_f, soundSpeed_f] = Atmos(altitude_f);
 
