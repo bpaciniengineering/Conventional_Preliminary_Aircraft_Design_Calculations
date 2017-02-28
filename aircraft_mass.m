@@ -2,7 +2,7 @@
 %% Bernardo Pacini                                                       %%
 %% MAE 332 - Aircraft Design                                             %%
 %% Preliminary Design Calculations                                       %%
-%% Feb. 21, 2017 Mon                                                     %%
+%% Feb. 23, 2017 Thur                                                    %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function [W_TO,W_fuel, W_empty] = aircraft_mass(M_cruise, R, AR, tsfc,...
     altitude, passengers, crew, baggage, loiter_dur, weight_max, graph)
@@ -12,16 +12,20 @@ function [W_TO,W_fuel, W_empty] = aircraft_mass(M_cruise, R, AR, tsfc,...
 altitude = altitude*0.3048;
 [airDens, airPres, temp, soundSpeed] = Atmos(altitude);%kg/m^3 N/m^2 K m/s
 % Convert values from SI to Imperial
-airDens    = airDens * 0.0624;       %lb/ft^3
-airPres    = airPres * 0.000145038;  %PSI
-temp       = (9/5)*(temp - 273) + 32; %F
-soundSpeed = soundSpeed*2.23694;     %convert to mph
+airDens    = airDens * 0.0624;          %lb/ft^3
+airPres    = airPres * 0.000145038;     %PSI
+temp       = (9/5)*(temp - 273) + 32;   %F
+soundSpeed = soundSpeed*2.23694;        %convert to mph
 % calculate cruise speed
 V_cruise = M_cruise*(soundSpeed);
 % calculating distance in miles
 R = R*1.15078; %nm -> m
 % Weight payload
-W_pay = (passengers + crew)*(200) + (passengers + crew)*(baggage);
+if baggage(2) == 0
+    W_pay = (passengers + crew)*(200) + (passengers + crew)*(baggage(1));
+else
+    W_pay = (passengers + crew)*(200) + (baggage(1));
+end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Ratio Calculations
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -29,7 +33,11 @@ W_pay = (passengers + crew)*(200) + (passengers + crew)*(baggage);
 ratio_startup = 0.9725;                                         %ESTIMATE
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Acceleration and Climb
-ratio_climb = 1.0065 - 0.0325*M_cruise;                         %ESTIMATE
+if M_cruise < 1
+    ratio_climb = 1.0065 - 0.0325*M_cruise;                         %ESTIMATE
+else
+    ratio_climb = 0.991 - 0.007*M_cruise - 0.01*M_cruise^2
+end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Cruise Out
 if M_cruise < 1
