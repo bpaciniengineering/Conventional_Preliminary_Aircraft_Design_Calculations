@@ -34,7 +34,7 @@ ratio_startup = 0.9725;                                         %ESTIMATE
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Acceleration and Climb
 if M_cruise < 1
-    ratio_climb = 1.0065 - 0.0325*M_cruise;                         %ESTIMATE
+    ratio_climb = 1.0065 - 0.0325*M_cruise;                        %ESTIMATE
 else
     ratio_climb = 0.991 - 0.007*M_cruise - 0.01*M_cruise^2
 end
@@ -47,7 +47,7 @@ else
 end
 % Breguet Range Equation
 % R = (V/tsfc) * (L_D) * ln(Wi/Wf) %lbfuel/h/lbt
-ratio_CO = 1/(exp(R*((tsfc)/(V_cruise))/(L_D)));
+ratio_CO = 1/(exp(R*((tsfc)/(V_cruise))/(L_D)))
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Loiter
 % E = (1/tsfc)*(L_D_max)*ln(Wi/Wf)

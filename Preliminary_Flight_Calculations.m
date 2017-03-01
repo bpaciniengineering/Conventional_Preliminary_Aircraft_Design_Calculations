@@ -135,9 +135,11 @@ dHdt = rate_climb;
 % Solution 2: Have 2 sets of variables to avoid unnecessary conversions
 
 g = 32.174; %ft/s^2
-q = dynamic_viscosity(alt);
-alpha_c = ((airDens_c/0.0624) / 1.225) * ...
-    (1 - exp((altitude_c - 18000) / 2000)); % from Prof. Stengel
+V_c = (soundSpeed_c*5280/3600)*M_cruise; % ft/s
+q = 0.5*g*(airDens_c/0.0624)*V_c^2;
+%alpha_c = ((airDens_c/0.0624) / 1.225) * ...
+%    (1 - exp((alt - 18000) / 2000)); % from Prof. Stengel
+alpha_c = 1;
 if M_cruise < 1
     L_D = AR + 10;
 else
@@ -145,13 +147,12 @@ else
 end
 % Breguet Range Equation
 % R = (V/tsfc) * (L_D) * ln(Wi/Wf) %lbfuel/h/lbt
-V_c = (soundSpeed_c/2.23694)*M_cruise;
-beta_c = 1/(exp(R*((tsfc)/(V_c))/(L_D)));
+beta_c = 1/(exp(R*6076.12*((tsfc/3600)/(V_c))/(L_D)));
 
 TW_cruise = (beta_c/alpha_c)*(K1_c*beta_c*WS/q + K2_c + ...
     (C_D0_c+C_DR_c)./(beta_c*WS/q));
 
-plot(WS, TW_cruise);
+plot(WS, TW_cruise, 'g');
 
 %n = sqrt(1 + ((V^2))/g*R); % - here we assume n = 1 (no turning)
 
