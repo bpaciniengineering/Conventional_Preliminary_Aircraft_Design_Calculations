@@ -136,7 +136,7 @@ dHdt = rate_climb;
 
 g = 32.174; %ft/s^2
 V_c = (soundSpeed_c*5280/3600)*M_cruise; % ft/s
-q = 0.5*g*(airDens_c/0.0624)*V_c^2;
+q = 0.5*(airDens_c/0.0624)*V_c^2; % note: 1 lbm = 1 lbf on Earth
 %alpha_c = ((airDens_c/0.0624) / 1.225) * ...
 %    (1 - exp((alt - 18000) / 2000)); % from Prof. Stengel
 alpha_c = 1;
@@ -153,6 +153,7 @@ TW_cruise = (beta_c/alpha_c)*(K1_c*beta_c*WS/q + K2_c + ...
     (C_D0_c+C_DR_c)./(beta_c*WS/q));
 
 plot(WS, TW_cruise, 'g');
+ylim([0 1]);
 
 %n = sqrt(1 + ((V^2))/g*R); % - here we assume n = 1 (no turning)
 

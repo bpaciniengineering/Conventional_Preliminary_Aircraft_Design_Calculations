@@ -81,6 +81,6 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % FINAL WEIGHT VALUES
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-W_fuel = 1.06*(W_TO - (W_TO*weight_ratio));
+W_fuel = (W_TO - (W_TO*weight_ratio))/0.94; % 0.94 is trapped fuel
 W_empty = W_TO - W_fuel - W_pay;
 end
