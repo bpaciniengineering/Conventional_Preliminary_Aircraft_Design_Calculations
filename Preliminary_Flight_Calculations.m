@@ -23,12 +23,12 @@ Trial_Name  = 'Trial 1' ;
 Description = ''        ;
 
 M_cruise    = 0.85       ; 
-R           = 2500      ; %nm
+R           = 6500      ; %nm
 AR          = 8         ; %assume about 8                       %ESTIMATE
 e           = 0.8       ; %Oswald efficiency factor, assume 0.8 (Raymer 92)
 tsfc        = 0.7       ; %0.45<=tsfc<=1.2 - check engine manufacturer
-altitude_c  = 35000     ; %cruise altitude, ft
-altitude_f  = 0         ; % airfield alitude, ft
+altitude_ci = 35000     ; %cruise altitude, ft
+altitude_fi = 0         ; % airfield alitude, ft
 passengers  = 210       ; %persons
 crew        = 6         ; %persons
 baggage     = [4000 1]  ; %lbs allotment passenger or crew
@@ -50,6 +50,8 @@ C_D0_c  = 0.02          ; % assumed (at cruise)
 C_DR_c  = 0             ; % assumed (clean configuration at cruise)
 K1_c    = 1/(pi*AR*e)   ; % induced drag correction factor
 K2_c    = 0             ; % viscous drag correction factor
+gamma   = 1.4           ; % specific heat ratio cp/cv, for air
+TR      = 1             ; % assumed
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%DO NOT MODIFY BELOW THIS POINT%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -58,7 +60,7 @@ K2_c    = 0             ; % viscous drag correction factor
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Take-off Weight
 [W_TO, W_fuel, W_empty] = aircraft_mass(M_cruise, R, AR, tsfc,...
-    altitude_c, passengers, crew, baggage, loiter_dur, weight_max, graph);
+    altitude_ci, passengers, crew, baggage, loiter_dur, weight_max, graph);
 
 disp(sprintf('%0.0f Takeoff Weight', W_TO)); 
 disp(sprintf('%0.0f Fuel Weight', W_fuel));
@@ -69,21 +71,22 @@ disp(sprintf('%0.0f Empty Weight', W_empty));
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Surface Area
 %[] = aircraft_surfacearea();
-alt = altitude_c*0.3048;
-[airDens_c, airPres_c, temp_c, soundSpeed_c] = Atmos(altitude_c);%kg/m^3 N/m^2 K m/s
-[airDens_f, airPres_f, temp_f, soundSpeed_f] = Atmos(altitude_f);
+altitude_c = altitude_ci*0.3048;
+[airDens_c, airPres_c, temp_c, soundSpeed_c] = Atmos(altitude_ci);%kg/m^3 N/m^2 K m/s
+[airDens_f, airPres_f, temp_f, soundSpeed_f] = Atmos(altitude_fi);
+[airDens_sl, airPres_sl, temp_sl, soundSpeed_sl] = Atmos(0);
 
 % Convert values from SI to Imperial
-airDens_c    = airDens_c * 0.0624;       %lb/ft^3
-airPres_c    = airPres_c * 0.000145038;  %PSI
-temp_c       = (9/5)*(temp_c - 273) + 32; %F
-soundSpeed_c = soundSpeed_c*2.23694;     %convert to mph
-airDens_f    = airDens_f * 0.0624;       %lb/ft^3
-airPres_f    = airPres_f * 0.000145038;  %PSI
-temp_f       = (9/5)*(temp_f - 273) + 32; %F
-soundSpeed_f = soundSpeed_f*2.23694;     %convert to mph
-airDens_sl = 0.0765; %air density at sea level
-sigma = airDens_f/airDens_sl;
+airDens_ci    = airDens_c * 0.0624;         %lbm/ft^3
+airPres_ci    = airPres_c * 0.000145038;    %PSI
+temp_ci       = (9/5)*(temp_c - 273) + 32;  %F
+soundSpeed_ci = soundSpeed_c*2.23694;       %convert to mph
+airDens_fi    = airDens_f * 0.0624;         %lb/ft^3
+airPres_fi    = airPres_f * 0.000145038;    %PSI
+temp_fi       = (9/5)*(temp_f - 273) + 32;  %F
+soundSpeed_fi = soundSpeed_f*2.23694;       %convert to mph
+airDens_sli = airDens_sl * 0.0624;          %air density at sea level
+sigma = airDens_fi/airDens_sli;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Stall
 figure()
@@ -93,7 +96,7 @@ xlabel('Wing Loading [W_g/S], lb/ft^2');
 ylabel('Thrust Loading [T_0/W_g]');
 hold on;
 V_stall = V_stall * 1.68781; %convert to ft/s
-WS_stall = ((V_stall^2)*airDens_sl*Clmax)/(2*32.174);
+WS_stall = ((V_stall^2)*airDens_sli*Clmax)/(2*32.174);
 % Plotted later for cosmetic reasons
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -111,7 +114,7 @@ line([WS_stall WS_stall],get(hax,'YLim'),'Color',[1 0 0]);
 % alpha =
 % k1 = 
 % k2 = 
-q = dynamic_viscosity(alt);
+q = dynamic_viscosity(altitude_c);
 
 % TW_CCF = (beta/alpha)*(k1*(beta/q)*WS + k2 + (CD_O + CD_R)/((beta/q)*WS));
 
@@ -121,7 +124,7 @@ q = dynamic_viscosity(alt);
 % alpha =
 % k1 = 
 % k2 = 
-q = dynamic_viscosity(alt);
+q = dynamic_viscosity(altitude_c);
 dHdt = rate_climb;
 
 %TW_CP = (beta/alpha)*(k1*(beta/q)*WS + k2 + (CD_O + CD_R)/((beta/q)*WS)...
@@ -129,17 +132,13 @@ dHdt = rate_climb;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Cruise-performance
-% ISSUE 1: some of this is copied from aircraft_mass.m
-% Solution 1: Think about restructuring the architecture to use code more efficiently
-% ISSUE 2: converting in and out of imperial is annoying
-% Solution 2: Have 2 sets of variables to avoid unnecessary conversions
+% ISSUE: some of this is copied from aircraft_mass.m
+% Solution: Think about restructuring the architecture to use code more efficiently
 
 g = 32.174; %ft/s^2
-V_c = (soundSpeed_c*5280/3600)*M_cruise; % ft/s
-q = 0.5*(airDens_c/0.0624)*V_c^2; % note: 1 lbm = 1 lbf on Earth
-%alpha_c = ((airDens_c/0.0624) / 1.225) * ...
-%    (1 - exp((alt - 18000) / 2000)); % from Prof. Stengel
-alpha_c = 1;
+V_c = (soundSpeed_c*3.28084)*M_cruise; % ft/s
+q = 0.5*(airDens_ci/g)*V_c^2; % note: 1 lbm = 1/g slugs
+
 if M_cruise < 1
     L_D = AR + 10;
 else
@@ -149,11 +148,21 @@ end
 % R = (V/tsfc) * (L_D) * ln(Wi/Wf) %lbfuel/h/lbt
 beta_c = 1/(exp(R*6076.12*((tsfc/3600)/(V_c))/(L_D)));
 
+% calculate alpha_tilde (for high bypass ratio turbofan engine)
+theta0 = (temp_c/temp_sl)*(1+0.5*(gamma-1)*M_cruise^2);
+delta0 = (airPres_c/airPres_sl)*...
+    (1+0.5*(gamma-1)*M_cruise^2)^(gamma/(gamma-1))
+if theta0 <= TR
+    alpha_c = delta0*(1 - 0.49*M_cruise^0.5);
+else
+    alpha_c = delta0*(1 - 0.49*M_cruise^0.5 - 3*(theta0-TR)/(1.5+M_cruise));
+end
+
 TW_cruise = (beta_c/alpha_c)*(K1_c*beta_c*WS/q + K2_c + ...
     (C_D0_c+C_DR_c)./(beta_c*WS/q));
 
 plot(WS, TW_cruise, 'g');
-ylim([0 1]);
+%ylim([0 0.5]);
 
 %n = sqrt(1 + ((V^2))/g*R); % - here we assume n = 1 (no turning)
 

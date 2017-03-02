@@ -47,7 +47,7 @@ else
 end
 % Breguet Range Equation
 % R = (V/tsfc) * (L_D) * ln(Wi/Wf) %lbfuel/h/lbt
-ratio_CO = 1/(exp(R*((tsfc)/(V_cruise))/(L_D)))
+ratio_CO = 1/(exp(R*((tsfc)/(V_cruise))/(L_D)));
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Loiter
 % E = (1/tsfc)*(L_D_max)*ln(Wi/Wf)
@@ -66,7 +66,7 @@ weight_ratio = ratio_startup* ratio_climb * ratio_CO * ...
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 w = linspace(1, weight_max, 1000);
 raymer = @(wto) wto*(1-(1.02*wto^(-0.06))) - ...
-    (wto - (wto*weight_ratio))*1.06 - W_pay;
+    (wto - (wto*weight_ratio))/0.94 - W_pay;
 x0 = [1 weight_max];
 W_TO = fzero(raymer, x0);
 if graph == 1
