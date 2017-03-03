@@ -72,7 +72,7 @@ W_TO = fzero(raymer, x0);
 if graph == 1
     figure()
     hold on;
-    plot(w, w.*(1-(1.02*w.^(-0.06))) - 1.06*(w-(w.*weight_ratio))-W_pay);
+    plot(w, w.*(1-(1.02*w.^(-0.06))) - (w-(w.*weight_ratio))/0.94-W_pay);
     plot(W_TO,0,'r*');
     title('Raymer Equation')
     xlabel('Weight (lbs)');

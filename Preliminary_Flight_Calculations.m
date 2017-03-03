@@ -22,16 +22,16 @@ clear all;
 Trial_Name  = 'Trial 1' ;
 Description = ''        ;
 
-M_cruise    = 0.85       ; 
-R           = 6500      ; %nm
-AR          = 8         ; %assume about 8                       %ESTIMATE
+M_cruise    = 0.78      ; 
+R           = 3900      ; %nm
+AR          = 9         ; %assume about 8                       %ESTIMATE
 e           = 0.8       ; %Oswald efficiency factor, assume 0.8 (Raymer 92)
-tsfc        = 0.7       ; %0.45<=tsfc<=1.2 - check engine manufacturer
-altitude_ci = 35000     ; %cruise altitude, ft
+tsfc        = 0.576       ; %0.45<=tsfc<=1.2 - check engine manufacturer
+altitude_ci = 39000     ; %cruise altitude, ft
 altitude_fi = 0         ; % airfield alitude, ft
-passengers  = 210       ; %persons
-crew        = 6         ; %persons
-baggage     = [4000 1]  ; %lbs allotment passenger or crew
+passengers  = 290       ; %persons
+crew        = 10         ; %persons
+baggage     = [50 0]  ; %lbs allotment passenger or crew
 loiter_dur  = 0         ; %sec
 
 weight_max  = 1e6       ; %max of weight range
