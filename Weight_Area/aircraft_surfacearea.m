@@ -5,7 +5,7 @@
 %% Feb. 20, 2017 Mon                                                     %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function [ output_args ] = aircraft_surfacearea( input_args )
-s
+
 
 
 end
