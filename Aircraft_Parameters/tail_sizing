@@ -1,0 +1,82 @@
+
+% Choose Tail Configuration
+T_Tail = 1; % 0 if a conventional tail arrangement; 1 if T-Tail
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Need input from outside sizings
+% C_bar_W = 5; % ft, MAC guess based on Hondajet
+% b_W = 49.5; % ft, wingspan, average of jets we looked at is 49.5 ft
+S_W = 294; % ft^2, Wing suraface area guess based on Cessna CJ3
+lambda_W = 0.3; %taper ratio,per Raymer 83,assuming LE sweep is appx 30 deg
+AR_W = 8; % initial guess
+
+L_fus = 50; % ft, fuselage length
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%*************  Iterate With These Values    ****************************%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Estimations from Raymer / Martinelli
+c_HT = 0.9; % HT volume coefficient, Martinelli 0.9 Bizjet 1.00 transport
+c_VT = 0.09; % VT volume coeffieient Initial Guess: 0.09 per Raymer pg. 160 and Martinelli
+L_HT = 0.45 * L_fus; % ft, H tail moment arm : aft engine per Raymer 160: 0.45 * L_fus
+L_VT = L_HT; % ft, V tial moment arm, initial guess L_HT
+AR_HT = 4; % initial guess 4 Raymer, 113
+AR_VT = 0.95; % initial guess 0.95 Raymer, 113, T-Tail
+lambda_HT = 0.45; % initial guess 0.45 Raymer, 113
+lambda_VT = 0.8; % initial guess 0.8 Raymer, 113, T-Tail
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Placement based on sizing
+[b_W, C_root_W, C_tip_W, C_bar_W, Y_bar_W] = ...
+    wing_sizing(S_W, AR_W, lambda_W) % set geometric parameters for Wing
+
+S_HT = SHT(c_HT, C_bar_W, S_W, L_HT, T_Tail) % set HT surface area
+
+S_VT = SVT(c_VT, b_W, S_W, L_VT, T_Tail) % set VT surface area
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Geometric qualities of tails
+[b_HT, C_root_HT, C_tip_HT, C_bar_HT, Y_bar_HT] = ...
+    wing_sizing(S_HT, AR_HT, lambda_HT) % set geometric parameters for HT
+
+[b_VT, C_root_VT, C_tip_VT, C_bar_VT,Y_bar_VT] = ...
+    wing_sizing(S_VT, AR_VT, lambda_VT) % set geometric parameters for VT
+
+Y_bar_VT = Y_bar_VT * 2 % must be doubled per Raymer 193
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+% H Tail Surface area Calculation, Raymer 159
+function [S_HT] = SHT(c_HT, C_bar_W, S_W, L_HT, T_Tail)
+if T_Tail == 1
+    c_HT = c_HT - .05 * c_HT;
+end
+S_HT = c_HT * C_bar_W * S_W / L_HT;
+end 
+
+% V Tail Surface area calculation, Raymer 159
+function [S_VT] = SVT(c_VT, b_W, S_W, L_VT, T_Tail)
+if T_Tail == 1
+    c_VT = c_VT - .05 * c_VT;
+end
+S_VT = c_VT * b_W * S_W / L_VT;
+end 
+
+% Size wing parameters based on Raymer 192 assuming trapezoidal wing
+function [b, C_root, C_tip, C_bar, Y_bar] = ...
+    wing_sizing(S, AR, lambda)
+b = sqrt(S * AR);
+C_root = 2 * S / (b *(1+lambda));
+C_tip = lambda * C_root;
+C_bar = (2/3) * C_root * (1 + lambda + lambda^2) ...
+    / (1 + lambda);
+Y_bar = (b / 6) * (1 + 2*lambda) / (1 + lambda);
+end
+
