@@ -22,16 +22,16 @@ clear all;
 Trial_Name  = 'Trial 1' ;
 Description = ''        ;
 
-M_cruise    = 0.8       ; 
-R           = 3500      ; %nm
+M_cruise    = 0.78      ; 
+R           = 2500      ; %nm
 AR          = 9         ; %assume about 8                       %ESTIMATE
 e           = 0.8       ; %Oswald efficiency factor, assume 0.8 (Raymer 92)
-tsfc        = 0.605     ; %0.45<=tsfc<=1.2 - check engine manufacturer
+tsfc        = 0.605       ; %0.45<=tsfc<=1.2 - check engine manufacturer
 altitude_ci = 35000     ; %cruise altitude, ft
-altitude_fi = 6000      ; % airfield alitude, ft
+altitude_fi = 6000         ; % airfield alitude, ft
 passengers  = 200       ; %persons
-crew        = 10        ; %persons
-baggage     = [50 0]    ; %lbs allotment passenger or crew
+crew        = 10         ; %persons
+baggage     = [50 0]  ; %lbs allotment passenger or crew
 loiter_dur  = 0         ; %sec
 
 weight_max  = 1e6       ; %max of weight range
@@ -39,19 +39,19 @@ graph       = 1         ; %1/0 for plot on/off
 
 V_stall     = 137       ; %knots
 V_approach  = 150       ; %knots
-Clmax       = 1.85      ; %assumed
+Clmax       = 1.8       ; %assumed
 L_takeoff   = 10500     ; %ft REQUIREMENT
 L_landing   = 3600      ; %ft REQUIREMENT
 rate_climb  = 3500      ; %ft/min
 theta_app   = 3         ; %approach angle, deg
 
 % cruise parameters
-C_D0_c      = 0.02      ; % assumed (at cruise)
-C_DR_c      = 0         ; % assumed (clean configuration at cruise)
-K1_c        = 1/(pi*AR*e); % induced drag correction factor
-K2_c        = 0         ; % viscous drag correction factor
-gamma       = 1.4       ; % specific heat ratio cp/cv, for air
-TR          = 1         ; % assumed
+C_D0_c  = 0.02          ; % assumed (at cruise)
+C_DR_c  = 0             ; % assumed (clean configuration at cruise)
+K1_c    = 1/(pi*AR*e)   ; % induced drag correction factor
+K2_c    = 0             ; % viscous drag correction factor
+gamma   = 1.4           ; % specific heat ratio cp/cv, for air
+TR      = 1             ; % assumed
 
 carpet_x_lim = [50 125];
 carpet_y_lim = [0 1];
@@ -116,10 +116,21 @@ line([WS_stall WS_stall],get(hax,'YLim'),'Color',[1 0 0]);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Constant Cruise Flight
+% beta = 
+% alpha =
+% k1 = 
+% k2 = 
+q = dynamic_viscosity(altitude_c);
+
 % TW_CCF = (beta/alpha)*(k1*(beta/q)*WS + k2 + (CD_O + CD_R)/((beta/q)*WS));
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Climb-performance
+% beta = 
+% alpha =
+% k1 = 
+% k2 = 
+q = dynamic_viscosity(altitude_c);
 dHdt = rate_climb;
 
 %TW_CP = (beta/alpha)*(k1*(beta/q)*WS + k2 + (CD_O + CD_R)/((beta/q)*WS)...
@@ -171,6 +182,9 @@ plot(WS, TW_cruise, 'g');
 
 %WS_landing = (s_L - 50/tan(deg2rad(theta_app)))*sigma*Clmax/79.4;
 %line([WS_landing WS_landing], get(hax,'YLim'),'Color',[0 1 0]);
+
+%SL = 
+%theta = 
 
 %WS_landing = ((sigma * Clmax)/(79.4)) *(SL  - 50/tan(theta))
 
