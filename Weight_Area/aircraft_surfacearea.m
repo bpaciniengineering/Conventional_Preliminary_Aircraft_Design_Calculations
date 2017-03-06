@@ -6,7 +6,5 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function [ output_args ] = aircraft_surfacearea( input_args )
 
-
-
 end
 
