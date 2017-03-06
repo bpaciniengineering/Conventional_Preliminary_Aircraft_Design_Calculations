@@ -37,9 +37,10 @@ loiter_dur  = 0         ; %sec
 weight_max  = 1e6       ; %max of weight range
 graph       = 1         ; %1/0 for plot on/off
 
-V_stall     = 137       ; %knots
+V_stall     = 137       ; %knots - better estimate possible?
 V_approach  = 150       ; %knots
-Clmax       = 1.85      ; %assumed
+Clmax_to    = 1.80      ; %assumed
+Clmax_land  = 2.10      ; %assumed
 L_takeoff   = 10500     ; %ft REQUIREMENT
 L_landing   = 3600      ; %ft REQUIREMENT
 rate_climb  = 3500      ; %ft/min
@@ -100,14 +101,14 @@ xlabel('Wing Loading [W_g/S], lb/ft^2');
 ylabel('Thrust Loading [T_0/W_g]');
 hold on;
 V_stall = V_stall * 1.68781; %convert to ft/s
-WS_stall = ((V_stall^2)*airDens_sli*Clmax)/(2*32.174);
+WS_stall = ((V_stall^2)*airDens_sli*Clmax_to)/(2*32.174);
 % Plotted later for cosmetic reasons
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Take-off
 WS = linspace(1,200);
-TW_takeoff = ((20.9.*WS)/(sigma*Clmax)).*...
-    (L_takeoff-69.6.*(WS./(sigma*Clmax)).^(.5)).^(-1);
+TW_takeoff = ((20.9.*WS)/(sigma*Clmax_to)).*...
+    (L_takeoff-69.6.*(WS./(sigma*Clmax_to)).^(.5)).^(-1);
 
 plot(WS, TW_takeoff);
 line([WS_stall WS_stall],get(hax,'YLim'),'Color',[1 0 0]);
@@ -169,12 +170,12 @@ plot(WS, TW_cruise, 'g');
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Landing
 
-%WS_landing = (s_L - 50/tan(deg2rad(theta_app)))*sigma*Clmax/79.4;
-%line([WS_landing WS_landing], get(hax,'YLim'),'Color',[0 1 0]);
+WS_landing = (L_landing - 50/tan(deg2rad(theta_app)))*sigma*Clmax_land/79.4;
+line([WS_landing WS_landing], get(hax,'YLim'),'Color',[0 1 1]);
 
-%WS_landing = ((sigma * Clmax)/(79.4)) *(SL  - 50/tan(theta))
+%WS_landing = ((sigma * Clmax_land)/(79.4)) *(SL  - 50/tan(theta))
 
-plot(WS, TW_takeoff);
+%plot(WS, TW_landing);
 title('Constraint Plane (T/W - W/S)');
 xlabel('Wing Loading [W_g/S], lb/ft^2');
 ylabel('Thrust Loading [T_0/W_g]');
