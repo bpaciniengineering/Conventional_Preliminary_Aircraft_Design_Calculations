@@ -16,8 +16,6 @@ altitude = altitude*0.3048;
     convert_to_imperial(airDens, airPres, temp, soundSpeed);
 % calculate cruise speed
 V_cruise = M_cruise*(soundSpeed);
-% calculating distance in miles
-R = R*1.15078; %nm -> m
 % Weight payload
 if baggage(2) == 0
     W_pay = (passengers + crew)*(200) + (passengers + crew)*(baggage(1));
@@ -29,23 +27,23 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Startup and Take-off
 ratio_startup = calculate_beta('takeoff', R, loiter_dur, 0, ...
-    0, AR, e, C_D0+C_DR, tsfc)
+    0, AR, e, C_D0+C_DR, tsfc);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Acceleration and Climb
 ratio_climb = calculate_beta('climb', R, loiter_dur, M_cruise, ...
-    V_cruise, AR, e, C_D0+C_DR, tsfc)
+    V_cruise, AR, e, C_D0+C_DR, tsfc);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Cruise Out
 ratio_CO = calculate_beta('cruise', R, loiter_dur, M_cruise, ...
-    V_cruise, AR, e, C_D0+C_DR, tsfc)
+    V_cruise, AR, e, C_D0+C_DR, tsfc);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Loiter
 ratio_Loiter = calculate_beta('loiter', R, loiter_dur, 0, ...
-    0, AR, e, C_D0+C_DR, tsfc)
+    0, AR, e, C_D0+C_DR, tsfc);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Landing
 ratio_landing = calculate_beta('land', R, loiter_dur, 0, ...
-    0, AR, e, C_D0+C_DR, tsfc)
+    0, AR, e, C_D0+C_DR, tsfc);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Total Ratio
 weight_ratio = ratio_startup* ratio_climb * ratio_CO * ...

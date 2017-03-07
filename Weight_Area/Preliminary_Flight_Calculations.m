@@ -33,7 +33,7 @@ altitude_fi = 0000      ; % airfield alitude, ft
 passengers  = 200       ; %persons
 crew        = 10        ; %persons
 baggage     = [50 0]    ; %lbs allotment passenger or crew
-loiter_dur  = 1         ; %hrs
+loiter_dur  = 0         ; %hrs
 
 weight_max  = 1e6       ; %max of weight range
 graph       = 1         ; %1/0 for plot on/off
