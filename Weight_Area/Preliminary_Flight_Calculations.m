@@ -144,7 +144,7 @@ plot(WS, TW_takeoff1, 'b');
 dHdt = rate_climb;
 V_climb = (soundSpeed_climb*3.28084)*M_climb; % ft/s
 beta_climb = 1.0065 - 0.0325*M_climb;
-q_climb = 0.5*(airDens_climbi/g)*V_climb^2; % note: 1 lbm = 1/g slugs
+q_climb = dynamic_pressure(airDens_climbi, V_climb, g);
 
 % calculate alpha_tilde (for high bypass ratio turbofan engine) - MOVE
 theta0 = (temp_climb/temp_sl)*(1+0.5*(gamma-1)*M_climb^2);
@@ -166,7 +166,7 @@ TW_climb = (beta_climb/alpha_climb).*(K1_c*(beta_climb/q_climb)*WS + K2_c + ...
 % Cruise-performance
 
 V_c = (soundSpeed_c*3.28084)*M_cruise; % ft/s
-q = 0.5*(airDens_ci/g)*V_c^2; % note: 1 lbm = 1/g slugs
+q_c = dynamic_pressure(airDens_ci, V_c, g);
 
 if M_cruise < 1
     L_D = AR + 10;
@@ -188,8 +188,8 @@ else
     alpha_c = delta0*(1 - 0.49*M_cruise^0.5 - 3*(theta0-TR)/(1.5+M_cruise));
 end
 
-TW_cruise = (beta_c/alpha_c)*(K1_c*beta_c*WS/q + K2_c + ...
-    (C_D0_c+C_DR_c)./(beta_c*WS/q));
+TW_cruise = (beta_c/alpha_c)*(K1_c*beta_c*WS/q_c + K2_c + ...
+    (C_D0_c+C_DR_c)./(beta_c*WS/q_c));
 
 plot(WS, TW_cruise, 'g');
 
