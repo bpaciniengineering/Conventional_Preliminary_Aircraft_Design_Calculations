@@ -22,17 +22,17 @@ clear all;
 Trial_Name  = 'Trial 1' ;
 Description = ''        ;
 
-M_cruise    = 0.8       ; 
+M_cruise    = 0.8       ;
 R           = 3500      ; %nm
 AR          = 9         ; %assume about 8                       %ESTIMATE
 e           = 0.8       ; %Oswald efficiency factor, assume 0.8 (Raymer 92)
 tsfc        = 0.605     ; %0.45<=tsfc<=1.2 - check engine manufacturer
 altitude_ci = 35000     ; %cruise altitude, ft
-altitude_fi = 6000      ; % airfield alitude, ft
+altitude_fi = 0000      ; % airfield alitude, ft
 passengers  = 200       ; %persons
 crew        = 10        ; %persons
 baggage     = [50 0]    ; %lbs allotment passenger or crew
-loiter_dur  = 0         ; %sec
+loiter_dur  = 1         ; %hrs
 
 weight_max  = 1e6       ; %max of weight range
 graph       = 1         ; %1/0 for plot on/off
@@ -43,7 +43,9 @@ Clmax_to    = 1.80      ; %assumed
 Clmax_land  = 2.10      ; %assumed
 L_takeoff   = 10500     ; %ft REQUIREMENT
 L_landing   = 3600      ; %ft REQUIREMENT
-rate_climb  = 3500      ; %ft/min
+M_climb     = 0.7       ; %arbitrary
+rate_climb  = 2000      ; %ft/min
+altitude_climbi = 16000 ; %ft (guess)
 theta_app   = 3         ; %approach angle, deg
 
 % cruise parameters
@@ -53,6 +55,7 @@ K1_c        = 1/(pi*AR*e); % induced drag correction factor
 K2_c        = 0         ; % viscous drag correction factor
 gamma       = 1.4       ; % specific heat ratio cp/cv, for air
 TR          = 1         ; % assumed
+g           = 32.174    ; %ft/s^2
 
 carpet_x_lim = [50 125];
 carpet_y_lim = [0 1];
@@ -76,10 +79,17 @@ disp(sprintf('%0.0f Empty Weight', W_empty));
 % Surface Area
 %[] = aircraft_surfacearea();
 altitude_c = altitude_ci*0.3048;
+altitude_climb = altitude_climbi*0.3048;
 altitude_f = altitude_fi*0.3048;
 [airDens_c, airPres_c, temp_c, soundSpeed_c] = Atmos(altitude_c);%kg/m^3 N/m^2 K m/s
 [airDens_f, airPres_f, temp_f, soundSpeed_f] = Atmos(altitude_f);
+[airDens_climb, airPres_climb, temp_climb, soundSpeed_climb] = Atmos(altitude_climb);
 [airDens_sl, airPres_sl, temp_sl, soundSpeed_sl] = Atmos(0);
+
+% 84 degrees Fahrenheit field conditions (for midterm)
+airDens_f       = 1.1644;   % kg/m^3
+temp_f          = 28.889;   % degrees C
+soundSpeed_f    = sqrt(1.4*287.1*(temp_f+273.15));
 
 % Convert values from SI to Imperial
 airDens_ci    = airDens_c * 0.0624;         %lbm/ft^3
@@ -90,6 +100,10 @@ airDens_fi    = airDens_f * 0.0624;         %lb/ft^3
 airPres_fi    = airPres_f * 0.000145038;    %PSI
 temp_fi       = (9/5)*(temp_f - 273) + 32;  %F
 soundSpeed_fi = soundSpeed_f*2.23694;       %convert to mph
+airDens_climbi    = airDens_climb * 0.0624;         %lb/ft^3
+airPres_climbi    = airPres_climb * 0.000145038;    %PSI
+temp_climbi       = (9/5)*(temp_climb - 273) + 32;  %F
+soundSpeed_climbi = soundSpeed_climb*2.23694;       %convert to mph
 airDens_sli = airDens_sl * 0.0624;          %air density at sea level
 sigma = airDens_fi/airDens_sli;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -122,16 +136,29 @@ line([WS_stall WS_stall],get(hax,'YLim'),'Color',[1 0 0]);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Climb-performance
 dHdt = rate_climb;
+V_climb = (soundSpeed_climb*3.28084)*M_climb; % ft/s
+beta_climb = 1.0065 - 0.0325*M_climb;
+q_climb = 0.5*(airDens_climbi/g)*V_climb^2; % note: 1 lbm = 1/g slugs
 
-%TW_CP = (beta/alpha)*(k1*(beta/q)*WS + k2 + (CD_O + CD_R)/((beta/q)*WS)...
- %   + (1/V)*(dHdt));
+% calculate alpha_tilde (for high bypass ratio turbofan engine) - MOVE
+theta0 = (temp_climb/temp_sl)*(1+0.5*(gamma-1)*M_climb^2);
+delta0 = (airPres_climb/airPres_sl)*...
+    (1+0.5*(gamma-1)*M_climb^2)^(gamma/(gamma-1));
+
+if theta0 <= TR
+    alpha_climb = delta0*(1 - 0.49*M_cruise^0.5);
+else
+    alpha_climb = delta0*(1 - 0.49*M_cruise^0.5 - 3*(theta0-TR)/(1.5+M_cruise));
+end
+
+TW_climb = (beta_climb/alpha_climb).*(K1_c*(beta_climb/q_climb)*WS + K2_c + ...
+    (C_D0_c + C_DR_c)./((beta_climb/q_climb)*WS) + (1/V_climb)*(dHdt));
+
+%plot(WS, TW_climb, 'm'); % REQUIRED THRUST LOADING IS TOO HIGH
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Cruise-performance
-% ISSUE: some of this is copied from aircraft_mass.m
-% Solution: Think about restructuring the architecture to use code more efficiently
 
-g = 32.174; %ft/s^2
 V_c = (soundSpeed_c*3.28084)*M_cruise; % ft/s
 q = 0.5*(airDens_ci/g)*V_c^2; % note: 1 lbm = 1/g slugs
 
@@ -159,13 +186,18 @@ TW_cruise = (beta_c/alpha_c)*(K1_c*beta_c*WS/q + K2_c + ...
     (C_D0_c+C_DR_c)./(beta_c*WS/q));
 
 plot(WS, TW_cruise, 'g');
-%ylim([0 0.5]);
 
 %n = sqrt(1 + ((V^2))/g*R); % - here we assume n = 1 (no turning)
 
 %TW_CLT = (beta/alpha)*(k1*n^2*(beta/q)*WS + k2*n + ...
   % (CD_O + CD_R)/((beta/q)*WS));
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Loiter time in hours
+%Estimate for (L/D)_max
+LD_max = 0.5*sqrt(pi*e*AR/C_D0_c);
+
+beta_l = 1/(exp((loiter_dur*tsfc)/LD_max));
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Landing
