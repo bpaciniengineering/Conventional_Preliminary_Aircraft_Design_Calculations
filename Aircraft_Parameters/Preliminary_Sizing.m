@@ -12,14 +12,22 @@ Wo = 13000 % lb ---just an estimate, needs to be input from weight calcs.
 fineness = 3 % length/(max diameter), 3 recommended by Raymer for subsonic aircraft
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+% Output controls
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+table_F = 1; % 0/1  fuselage geometry table off/on
+table_W = 1; % 0/1  wings & tails geometry table  off/on
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 % Fuselage Sizing
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 [L_fus, D_max_fus] =  Fuselage_Sizing(a, C, Wo, fineness) % ft fuselage length and max diameter
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% Output controls
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-table_W = 1; % 0/1  wings & tails geometry table  off/on
+Fuselage_Parameter = [L_fus;D_max_fus]
+fus_param_names = {'Length','Max Diameter'}
+F = table(Fuselage_Parameter, 'RowNames', fus_param_names);
+if table_F == 1
+    F
+end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Choose Tail Configuration
