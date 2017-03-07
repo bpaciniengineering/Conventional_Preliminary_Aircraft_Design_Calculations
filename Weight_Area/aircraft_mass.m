@@ -12,10 +12,8 @@ function [W_TO,W_fuel, W_empty] = aircraft_mass(M_cruise, R, AR, tsfc,...
 altitude = altitude*0.3048;
 [airDens, airPres, temp, soundSpeed] = Atmos(altitude);%kg/m^3 N/m^2 K m/s
 % Convert values from SI to Imperial
-airDens    = airDens * 0.0624;          %lb/ft^3
-airPres    = airPres * 0.000145038;     %PSI
-temp       = (9/5)*(temp - 273) + 32;   %F
-soundSpeed = soundSpeed*2.23694;        %convert to mph
+[airDens, airPres, temp, soundSpeed] = ...
+    convert_to_imperial(airDens, airPres, temp, soundSpeed);
 % calculate cruise speed
 V_cruise = M_cruise*(soundSpeed);
 % calculating distance in miles
