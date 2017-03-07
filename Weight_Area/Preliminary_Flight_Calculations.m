@@ -146,16 +146,8 @@ V_climb = (soundSpeed_climb*3.28084)*M_climb; % ft/s
 beta_climb = 1.0065 - 0.0325*M_climb;
 q_climb = dynamic_pressure(airDens_climbi, V_climb, g);
 
-% calculate alpha_tilde (for high bypass ratio turbofan engine) - MOVE
-theta0 = (temp_climb/temp_sl)*(1+0.5*(gamma-1)*M_climb^2);
-delta0 = (airPres_climb/airPres_sl)*...
-    (1+0.5*(gamma-1)*M_climb^2)^(gamma/(gamma-1));
-
-if theta0 <= TR
-    alpha_climb = delta0*(1 - 0.49*M_cruise^0.5);
-else
-    alpha_climb = delta0*(1 - 0.49*M_cruise^0.5 - 3*(theta0-TR)/(1.5+M_cruise));
-end
+alpha_climb = calculate_alpha(temp_climb, airPres_climb, temp_sl, airPres_sl, ...
+    gamma, M_climb, TR);
 
 TW_climb = (beta_climb/alpha_climb).*(K1_c*(beta_climb/q_climb)*WS + K2_c + ...
     (C_D0_c + C_DR_c)./((beta_climb/q_climb)*WS) + (1/V_climb)*(dHdt));
@@ -177,16 +169,8 @@ end
 % R = (V/tsfc) * (L_D) * ln(Wi/Wf) %lbfuel/h/lbt
 beta_c = 1/(exp(R*6076.12*((tsfc/3600)/(V_c))/(L_D)));
 
-% calculate alpha_tilde (for high bypass ratio turbofan engine)
-theta0 = (temp_c/temp_sl)*(1+0.5*(gamma-1)*M_cruise^2);
-delta0 = (airPres_c/airPres_sl)*...
-    (1+0.5*(gamma-1)*M_cruise^2)^(gamma/(gamma-1));
-
-if theta0 <= TR
-    alpha_c = delta0*(1 - 0.49*M_cruise^0.5);
-else
-    alpha_c = delta0*(1 - 0.49*M_cruise^0.5 - 3*(theta0-TR)/(1.5+M_cruise));
-end
+alpha_c = calculate_alpha(temp_c, airPres_c, temp_sl, airPres_sl, ...
+    gamma, M_cruise, TR);
 
 TW_cruise = (beta_c/alpha_c)*(K1_c*beta_c*WS/q_c + K2_c + ...
     (C_D0_c+C_DR_c)./(beta_c*WS/q_c));
