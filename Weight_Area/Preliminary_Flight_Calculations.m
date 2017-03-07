@@ -7,7 +7,8 @@
 %% Description: This code will output preliminary aircraft design        %%
 %% calculations to a .txt file.                                          %%
 %%                                                                       %%
-%% Extra Dependencies: | aircraft_mass.m | atmos.m |                     %%
+%% Extra Dependencies: | aircraft_mass.m | Atmos.m | calculate_alpha.m | %%
+%%    calculate_beta.m | convert_to_imperial.m | dynamic_pressure.m      %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 close all;
 clear all;
@@ -92,19 +93,15 @@ temp_f          = 28.889;   % degrees C
 soundSpeed_f    = sqrt(1.4*287.1*(temp_f+273.15));
 
 % Convert values from SI to Imperial
-airDens_ci    = airDens_c * 0.0624;         %lbm/ft^3
-airPres_ci    = airPres_c / 6894.744;    %PSI
-temp_ci       = (9/5)*(temp_c - 273) + 32;  %F
-soundSpeed_ci = soundSpeed_c*2.23694;       %convert to mph
-airDens_fi    = airDens_f * 0.0624;         %lb/ft^3
-airPres_fi    = airPres_f * 0.000145038;    %PSI
-temp_fi       = (9/5)*(temp_f - 273) + 32;  %F
-soundSpeed_fi = soundSpeed_f*2.23694;       %convert to mph
-airDens_climbi    = airDens_climb * 0.0624;         %lb/ft^3
-airPres_climbi    = airPres_climb * 0.000145038;    %PSI
-temp_climbi       = (9/5)*(temp_climb - 273) + 32;  %F
-soundSpeed_climbi = soundSpeed_climb*2.23694;       %convert to mph
-airDens_sli = airDens_sl * 0.0624;          %air density at sea level
+[airDens_ci, airPres_ci, temp_ci, soundSpeed_ci] = ...
+    convert_to_imperial(airDens_c, airPres_c, temp_c, soundSpeed_c);
+[airDens_fi, airPres_fi, temp_fi, soundSpeed_fi] = ...
+    convert_to_imperial(airDens_f, airPres_f, temp_f, soundSpeed_f);
+[airDens_climbi, airPres_climbi, temp_climbi, soundSpeed_climbi] = ...
+    convert_to_imperial(airDens_climb, airPres_climb, temp_climb, soundSpeed_climb);
+[airDens_sli, airPres_sli, temp_sli, soundSpeed_sli] = ...
+    convert_to_imperial(airDens_sl, airPres_sl, temp_sl, soundSpeed_sl);
+
 sigma = airDens_fi/airDens_sli;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Stall
@@ -115,7 +112,7 @@ xlabel('Wing Loading [W_g/S], lb/ft^2');
 ylabel('Thrust Loading [T_0/W_g]');
 hold on;
 V_stall = V_stall * 1.68781; %convert to ft/s
-WS_stall = ((V_stall^2)*airDens_sli*Clmax_to)/(2*32.174);
+WS_stall = ((V_stall^2)*airDens_sli*Clmax_to)/(2*g);
 % Plotted later for cosmetic reasons
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
