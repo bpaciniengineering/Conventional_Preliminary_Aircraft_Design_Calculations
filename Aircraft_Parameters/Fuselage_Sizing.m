@@ -5,9 +5,9 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-function [L_fuse, D_max_fuse] = fuselage_sizing(a,C,Wo,fineness)
+function [L_fus, D_max_fus] = fuselage_sizing(a,C,Wo,fineness)
 
 L_fus = a*Wo^C % ft
 
-D_max_fuse = L_fus/fineness % ft
+D_max_fus = L_fus/fineness % ft
 
