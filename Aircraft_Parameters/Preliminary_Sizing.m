@@ -3,13 +3,26 @@
 % MAE 332 - Preliminary Sizings 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+
+% Fuselage parameters from 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Wo = 13000 % lb ---just an estimate, needs to be input from weight calcs.
+a = .86 % From Table 6.4 Raymer, varies with type of aircraft
+C = .42 % From Table 6.4 Raymer, varies with type of aircraft
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Fuselage Sizing
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[L_fus, D_max_fus] =  Fuselage_Sizing(a, C,Wo) % ft fuselage length and max diameter
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 % Output controls
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 table_W = 1; % 0/1  wings & tails geometry table  off/on
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Choose Tail Configuration
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 T_Tail = 1; % 0 if a conventional tail arrangement; 1 if T-Tail
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -18,8 +31,6 @@ T_Tail = 1; % 0 if a conventional tail arrangement; 1 if T-Tail
 S_W =             294; % ft^2, Wing suraface area guess based on Cessna CJ3
 lambda_W =        0.3; % taper ratio,per Raymer 83,assuming LE sweep is appx 30 deg
 AR_W =              8; % initial guess
-
-L_fus =          47.5; % ft, fuselage length based on our estimate
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Estimations from Raymer / Martinelli
