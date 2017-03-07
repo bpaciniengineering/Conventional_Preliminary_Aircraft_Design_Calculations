@@ -44,9 +44,9 @@ Clmax_to    = 1.80      ; %assumed
 Clmax_land  = 2.10      ; %assumed
 L_takeoff   = 10500     ; %ft REQUIREMENT
 L_landing   = 3600      ; %ft REQUIREMENT
-M_climb     = 0.7       ; %arbitrary
+M_climb     = M_cruise  ; %for now (see aircraft_mass.m)
 rate_climb  = 2000      ; %ft/min
-altitude_climbi = 16000 ; %ft (guess)
+altitude_climbi = altitude_ci ; %ft, for now (see aircraft_mass.m)
 theta_app   = 3         ; %approach angle, deg
 
 % cruise parameters
@@ -67,7 +67,7 @@ carpet_y_lim = [0 1];
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Take-off Weight
-[W_TO, W_fuel, W_empty] = aircraft_mass(M_cruise, R, AR, tsfc,...
+[W_TO, W_fuel, W_empty] = aircraft_mass(M_cruise, R, AR, e, C_D0_c, C_DR_c, tsfc,...
     altitude_ci, passengers, crew, baggage, loiter_dur, weight_max, graph);
 
 disp(sprintf('%0.0f Takeoff Weight', W_TO)); 
@@ -143,7 +143,8 @@ plot(WS, TW_takeoff1, 'b');
 % Climb-performance
 dHdt = rate_climb;
 V_climb = (soundSpeed_climb*3.28084)*M_climb; % ft/s
-beta_climb = 1.0065 - 0.0325*M_climb;
+beta_climb = calculate_beta('climb', R, loiter_dur, M_climb, ...
+    soundSpeed_climbi*M_climb, AR, e, C_D0_c+C_DR_c, tsfc);
 q_climb = dynamic_pressure(airDens_climbi, V_climb, g);
 
 alpha_climb = calculate_alpha(temp_climb, airPres_climb, temp_sl, airPres_sl, ...
@@ -160,14 +161,8 @@ TW_climb = (beta_climb/alpha_climb).*(K1_c*(beta_climb/q_climb)*WS + K2_c + ...
 V_c = (soundSpeed_c*3.28084)*M_cruise; % ft/s
 q_c = dynamic_pressure(airDens_ci, V_c, g);
 
-if M_cruise < 1
-    L_D = AR + 10;
-else 
-    L_D = 11/sqrt(M_cruise);
-end
-% Breguet Range Equation
-% R = (V/tsfc) * (L_D) * ln(Wi/Wf) %lbfuel/h/lbt
-beta_c = 1/(exp(R*6076.12*((tsfc/3600)/(V_c))/(L_D)));
+beta_c = calculate_beta('cruise', R, loiter_dur, M_cruise, ...
+    soundSpeed_ci*M_cruise, AR, e, C_D0_c+C_DR_c, tsfc);
 
 alpha_c = calculate_alpha(temp_c, airPres_c, temp_sl, airPres_sl, ...
     gamma, M_cruise, TR);
@@ -184,10 +179,8 @@ plot(WS, TW_cruise, 'g');
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %Loiter time in hours
-%Estimate for (L/D)_max
-LD_max = 0.5*sqrt(pi*e*AR/C_D0_c);
-
-beta_l = 1/(exp((loiter_dur*tsfc)/LD_max));
+beta_l = calculate_beta('loiter', R, loiter_dur, 0, ...
+    0, AR, e, C_D0_c+C_DR_c, tsfc);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Landing

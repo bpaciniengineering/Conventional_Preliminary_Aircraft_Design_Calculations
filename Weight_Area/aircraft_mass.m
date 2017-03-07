@@ -4,7 +4,7 @@
 %% Preliminary Design Calculations                                       %%
 %% Feb. 23, 2017 Thur                                                    %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-function [W_TO,W_fuel, W_empty] = aircraft_mass(M_cruise, R, AR, tsfc,...
+function [W_TO,W_fuel, W_empty] = aircraft_mass(M_cruise, R, AR, e, C_D0, C_DR, tsfc,...
     altitude, passengers, crew, baggage, loiter_dur, weight_max, graph)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% INITIAL Calculations
@@ -28,33 +28,24 @@ end
 %% Ratio Calculations
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Startup and Take-off
-ratio_startup = 0.9725;                                         %ESTIMATE
+ratio_startup = calculate_beta('takeoff', R, loiter_dur, 0, ...
+    0, AR, e, C_D0+C_DR, tsfc)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Acceleration and Climb
-if M_cruise < 1
-    ratio_climb = 1.0065 - 0.0325*M_cruise;                        %ESTIMATE
-else
-    ratio_climb = 0.991 - 0.007*M_cruise - 0.01*M_cruise^2
-end
+ratio_climb = calculate_beta('climb', R, loiter_dur, M_cruise, ...
+    V_cruise, AR, e, C_D0+C_DR, tsfc)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Cruise Out
-if M_cruise < 1
-    L_D = AR + 10;                                              %M<1
-else
-    L_D = 11/sqrt(M);                                           %M>1
-end
-% Breguet Range Equation
-% R = (V/tsfc) * (L_D) * ln(Wi/Wf) %lbfuel/h/lbt
-ratio_CO = 1/(exp(R*((tsfc)/(V_cruise))/(L_D)));
+ratio_CO = calculate_beta('cruise', R, loiter_dur, M_cruise, ...
+    V_cruise, AR, e, C_D0+C_DR, tsfc)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Loiter
-% E = (1/tsfc)*(L_D_max)*ln(Wi/Wf)
-E = loiter_dur/(3600);
-L_D_max = L_D / 0.94;
-ratio_Loiter = 1/(exp((E * tsfc)/(L_D_max)));
+ratio_Loiter = calculate_beta('loiter', R, loiter_dur, 0, ...
+    0, AR, e, C_D0+C_DR, tsfc)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Landing
-ratio_landing = 0.9725;                                         %ESTIMATE
+ratio_landing = calculate_beta('land', R, loiter_dur, 0, ...
+    0, AR, e, C_D0+C_DR, tsfc)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Total Ratio
 weight_ratio = ratio_startup* ratio_climb * ratio_CO * ...
