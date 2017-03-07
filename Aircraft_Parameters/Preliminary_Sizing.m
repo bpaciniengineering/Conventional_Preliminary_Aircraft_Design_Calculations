@@ -22,7 +22,9 @@ table_W = 1; % 0/1  wings & tails geometry table  off/on
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 [L_fus, D_max_fus] =  Fuselage_Sizing(a, C, Wo, fineness) % ft fuselage length and max diameter
 
-F = table([L_fus;D_max_fus], 'RowNames', {'L_fus','D_max_fus'});
+Fuselage_Parameter = [L_fus;D_max_fus]
+fus_param_names = {'Length','Max Diameter'}
+F = table(Fuselage_Parameter, 'RowNames', fus_param_names);
 if table_F == 1
     F
 end
