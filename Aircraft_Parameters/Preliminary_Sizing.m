@@ -6,14 +6,15 @@
 
 % Fuselage parameters from 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Wo = 13000 % lb ---just an estimate, needs to be input from weight calcs.
 a = .86 % From Table 6.4 Raymer, varies with type of aircraft
 C = .42 % From Table 6.4 Raymer, varies with type of aircraft
+Wo = 13000 % lb ---just an estimate, needs to be input from weight calcs.
+fineness = 3 % length/(max diameter), 3 recommended by Raymer for subsonic aircraft
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Fuselage Sizing
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-[L_fus, D_max_fus] =  Fuselage_Sizing(a, C,Wo) % ft fuselage length and max diameter
+[L_fus, D_max_fus] =  Fuselage_Sizing(a, C,Wo,fineness) % ft fuselage length and max diameter
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Output controls
