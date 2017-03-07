@@ -14,7 +14,7 @@ fineness = 3 % length/(max diameter), 3 recommended by Raymer for subsonic aircr
 
 % Fuselage Sizing
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-[L_fus, D_max_fus] =  Fuselage_Sizing(a, C,Wo,fineness) % ft fuselage length and max diameter
+[L_fus, D_max_fus] =  Fuselage_Sizing(a, C, Wo, fineness) % ft fuselage length and max diameter
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Output controls
