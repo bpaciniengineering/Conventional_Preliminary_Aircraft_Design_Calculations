@@ -124,10 +124,19 @@ WS = linspace(1,200);
 TW_takeoff = ((20.9.*WS)/(sigma*Clmax_to)).*...
     (L_takeoff-69.6.*(WS./(sigma*Clmax_to)).^(.5)).^(-1);
 
-plot(WS, TW_takeoff);
+plot(WS, TW_takeoff, 'b--');
 line([WS_stall WS_stall],get(hax,'YLim'),'Color',[1 0 0]);
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Take-off - revised to include full take-off field length
+index = (-28.43 + sqrt(28.43^2 - 4*(857.4-L_takeoff)*0.0185))/(2*0.0185);
+% Take positive root only
+% index2 = (-28.43 - sqrt(28.43^2 - 4*(857.4-L_takeoff)*0.0185))/(2*0.0185);
 
+TW_takeoff1 = WS / (sigma*Clmax_to*index);
+%TW_takeoff2 = WS / (sigma*Clmax_to*index2);
+plot(WS, TW_takeoff1, 'b');
+%plot(WS, TW_takeoff2, 'c--');
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Constant Cruise Flight
