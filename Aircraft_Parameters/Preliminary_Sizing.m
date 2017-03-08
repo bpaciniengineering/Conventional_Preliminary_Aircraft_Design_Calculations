@@ -51,11 +51,11 @@ sweep_LE_VT= 30 * rad; % rad, guess assuming M=8 from Raymer fig 4.19
 
 % Fuselage Sizing
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-[L_fus, D_max_fus, L_HT, V_fus] = fuselage_sizing(a,C,Wo,fineness,L_cockpit,upsweep) 
+[L_fus, D_max_fus, L_HT, V_fus] = Fuselage_Sizing(a,C,Wo,fineness,L_cockpit,upsweep) 
 
 L_VT = L_HT; % ft, V tial moment arm, initial guess L_HT
 Fuselage_Parameter = [L_fus;D_max_fus;V_fus];
-fus_param_names = {'Length','Max Diameter','Volume Fuselage};
+fus_param_names = {'Length','Max Diameter','Volume Fuselage'};
 F = table(Fuselage_Parameter, 'RowNames', fus_param_names);
 if table_F == 1
     F
