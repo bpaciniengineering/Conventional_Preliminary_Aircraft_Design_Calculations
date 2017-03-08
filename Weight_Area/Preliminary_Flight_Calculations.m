@@ -87,6 +87,9 @@ altitude_f = altitude_fi*0.3048;
 [airDens_climb, airPres_climb, temp_climb, soundSpeed_climb] = Atmos(altitude_climb);
 [airDens_sl, airPres_sl, temp_sl, soundSpeed_sl] = Atmos(0);
 
+% convert nm to miles
+R = R*1.15078;
+
 % 84 degrees Fahrenheit field conditions (for midterm)
 airDens_f       = 1.1644;   % kg/m^3
 temp_f          = 28.889;   % degrees C
