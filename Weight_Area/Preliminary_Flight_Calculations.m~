@@ -24,14 +24,14 @@ Trial_Name  = 'Trial 1' ;
 Description = ''        ;
 
 M_cruise    = 0.78       ;
-R           = 3900      ; %nm
+R           = 3500      ; %nm
 AR          = 9         ; %assume about 8                       %ESTIMATE
 e           = 0.8       ; %Oswald efficiency factor, assume 0.8 (Raymer 92)
-tsfc        = 0.576     ; %0.45<=tsfc<=1.2 - check engine manufacturer
-altitude_ci = 39000     ; %cruise altitude, ft
+tsfc        = 0.605     ; %0.45<=tsfc<=1.2 - check engine manufacturer
+altitude_ci = 35000     ; %cruise altitude, ft
 altitude_fi = 0000      ; % airfield alitude, ft
-passengers  = 290       ; %persons
-crew        = 10        ; %persons
+passengers  = 180       ; %persons
+crew        = 8        ; %persons
 baggage     = [50 0]    ; %lbs allotment passenger or crew
 loiter_dur  = 0         ; %hrs
 
@@ -67,8 +67,9 @@ carpet_y_lim = [0 1];
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Take-off Weight
-[W_TO, W_fuel, W_empty] = aircraft_mass(M_cruise, R, AR, e, C_D0_c, C_DR_c, tsfc,...
-    altitude_ci, passengers, crew, baggage, loiter_dur, weight_max, graph);
+[W_TO, W_fuel, W_empty] = aircraft_mass(M_cruise, R, AR, e, C_D0_c, C_DR_c,
+    tsfc,altitude_ci, passengers, crew, baggage, loiter_dur, weight_max, ...
+    graph);
 
 disp(sprintf('%0.0f Takeoff Weight', W_TO)); 
 disp(sprintf('%0.0f Fuel Weight', W_fuel));

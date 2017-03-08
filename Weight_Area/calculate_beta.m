@@ -5,10 +5,9 @@
 %% 7 March 2017                                                          %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% R (nm), E (hrs), V (mph), tsfc (lbfuel/hr/lbthrust)
+% R (miles), E (hrs), V (mph), tsfc (lbfuel/hr/lbthrust)
 function beta = calculate_beta(ID, R, E, M, V, AR, e, C_D0, tsfc)
 
-R = R*1.15078; %nm -> m
 
 if M < 1
     L_D = AR + 10;                                              %M<1
@@ -31,7 +30,11 @@ switch ID
     case 'cruise'
         % Breguet Range Equation
         % R = (V/tsfc) * (L_D) * ln(Wi/Wf) %lbfuel/h/lbt
-        beta = 1/(exp(R*(tsfc/V)/L_D));
+        disp(R)
+        %disp(tsfc)
+        %disp(V)
+        %disp(L_D)
+        beta = 1/(exp(R*((tsfc/V))/(L_D)));
         
     case 'loiter'
         %LD_max = 0.5*sqrt(pi*e*AR/C_D0);
