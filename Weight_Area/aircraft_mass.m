@@ -10,12 +10,12 @@ function [W_TO,W_fuel, W_empty] = aircraft_mass(M_cruise, R, AR, e, C_D0, C_DR, 
 %% INITIAL Calculations
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 altitude = altitude*0.3048;
-[airDens, airPres, temp, soundSpeed] = Atmos(altitude)%kg/m^3 N/m^2 K m/s
+[airDens, airPres, temp, soundSpeed] = Atmos(altitude);%kg/m^3 N/m^2 K m/s
 % Convert values from SI to Imperial
 [airDens, airPres, temp, soundSpeed] = ...
-    convert_to_imperial(airDens, airPres, temp, soundSpeed)
+    convert_to_imperial(airDens, airPres, temp, soundSpeed);
 % calculate cruise speed
-V_cruise = M_cruise*(soundSpeed)
+V_cruise = M_cruise*(soundSpeed);
 % convert nm to miles
 R = R*1.15078;
 % Weight payload
@@ -37,7 +37,7 @@ ratio_climb = calculate_beta('climb', R, loiter_dur, M_cruise, ...
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Cruise Out
 ratio_CO = calculate_beta('cruise', R, loiter_dur, M_cruise, ...
-    V_cruise, AR, e, C_D0+C_DR, tsfc)
+    V_cruise, AR, e, C_D0+C_DR, tsfc);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Loiter
 ratio_Loiter = calculate_beta('loiter', R, loiter_dur, 0, ...

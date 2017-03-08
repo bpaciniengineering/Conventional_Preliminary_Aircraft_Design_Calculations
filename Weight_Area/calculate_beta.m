@@ -30,7 +30,7 @@ switch ID
     case 'cruise'
         % Breguet Range Equation
         % R = (V/tsfc) * (L_D) * ln(Wi/Wf) %lbfuel/h/lbt
-        disp(R)
+        %disp(R)
         %disp(tsfc)
         %disp(V)
         %disp(L_D)
