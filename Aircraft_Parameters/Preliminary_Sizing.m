@@ -21,13 +21,15 @@ S_W =             294; % ft^2, Wing suraface area guess based on Cessna CJ3
 lambda_W =        0.3; % taper ratio,per Raymer 83,assuming LE sweep is appx 30 deg
 AR_W =              8; % initial guess
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Fuselage parameters from 
+% Fuselage parameters from Raymer and 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 a =              0.67; % From Table 6.4 Raymer, varies with type of aircraft
 C =              0.43; % From Table 6.4 Raymer, varies with type of aircraft
 Wo =            13000; % lb ---just an estimate, needs to be input from weight calcs.
 fineness =          6; % length/(max diameter), 3 recommended by Raymer for subsonic aircraft... 
                        % but 6 is more realistic for commercial 
+upsweep = .436 % rad = 25 deg, max upsweep per Raymer
+L_cockpit = 100/12; % ft
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Wing surface parameters from Raymer / Martinelli
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -49,11 +51,11 @@ sweep_LE_VT= 30 * rad; % rad, guess assuming M=8 from Raymer fig 4.19
 
 % Fuselage Sizing
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-[L_fus, D_max_fus, L_HT] =  Fuselage_Sizing(a, C, Wo, fineness); % ft fuselage length and max diameter
+[L_fus, D_max_fus, L_HT, V_fus] = fuselage_sizing(a,C,Wo,fineness,L_cockpit,upsweep) 
 
 L_VT = L_HT; % ft, V tial moment arm, initial guess L_HT
-Fuselage_Parameter = [L_fus;D_max_fus];
-fus_param_names = {'Length','Max Diameter'};
+Fuselage_Parameter = [L_fus;D_max_fus;V_fus];
+fus_param_names = {'Length','Max Diameter','Volume Fuselage};
 F = table(Fuselage_Parameter, 'RowNames', fus_param_names);
 if table_F == 1
     F
