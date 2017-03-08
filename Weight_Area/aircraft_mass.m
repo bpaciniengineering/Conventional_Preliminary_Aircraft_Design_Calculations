@@ -16,6 +16,12 @@ altitude = altitude*0.3048;
     convert_to_imperial(airDens, airPres, temp, soundSpeed);
 % calculate cruise speed
 V_cruise = M_cruise*(soundSpeed);
+%convert from nm -> m
+R = R*1.15078;
+% convert from seconds to hours
+E = loiter_dur/(3600);
+
+
 % Weight payload
 if baggage(2) == 0
     W_pay = (passengers + crew)*(200) + (passengers + crew)*(baggage(1));
