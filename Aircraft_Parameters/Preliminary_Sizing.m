@@ -23,8 +23,8 @@ AR_W =              8; % initial guess
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Fuselage parameters from 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-a =              0.86; % From Table 6.4 Raymer, varies with type of aircraft
-C =              0.42; % From Table 6.4 Raymer, varies with type of aircraft
+a =              0.67; % From Table 6.4 Raymer, varies with type of aircraft
+C =              0.43; % From Table 6.4 Raymer, varies with type of aircraft
 Wo =            13000; % lb ---just an estimate, needs to be input from weight calcs.
 fineness =          3; % length/(max diameter), 3 recommended by Raymer for subsonic aircraft
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
