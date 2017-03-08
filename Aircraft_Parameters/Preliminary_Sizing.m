@@ -39,7 +39,7 @@ AR_HT =             4; % initial guess 4 Raymer, 113
 AR_VT =          0.95; % initial guess 0.95 Raymer, 113, T-Tail
 lambda_HT =      0.45; % initial guess 0.45 Raymer, 113
 lambda_VT =       0.8; % initial guess 0.8 Raymer, 113, T-Tail
-diherdral_W = 5 * rad; % rad, guess from Raymer Table 4.2 for low subsonic swept
+dihedral_W = 5 * rad; % rad, guess from Raymer Table 4.2 for low subsonic swept
 dihedral_HT = 0 * rad; % deg, keep zero for now
 sweep_LE_W = 30 * rad; % rad, guess assuming M=8 from Raymer fig 4.19
 sweep_LE_HT= 30 * rad; % rad, guess assuming M=8 from Raymer fig 4.19
@@ -82,7 +82,7 @@ Y_MAC = [Y_bar_W; Y_bar_HT; Y_bar_VT];
 LE_Sweep_deg = [sweep_LE_W / rad; sweep_LE_HT/ rad; sweep_LE_VT/ rad];
 Quarter_C_Sweep_deg = [sweep_c_W/ rad; sweep_c_HT/ rad; sweep_c_VT/ rad];
 TE_Sweep_deg = [sweep_TE_W/ rad; sweep_TE_HT/ rad; sweep_TE_VT/ rad];
-Dihedral
+% Dihedral
 
 T = table(Span, Root_Chord, Tip_Chord, MAC, Y_MAC, LE_Sweep_deg, ...
     Quarter_C_Sweep_deg,TE_Sweep_deg, 'RowNames', Wingtype);
