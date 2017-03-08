@@ -33,14 +33,12 @@ fineness =          6; % length/(max diameter), 3 recommended by Raymer for subs
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 c_HT =            0.9; % HT volume coefficient, Martinelli 0.9 Bizjet 1.00 transport
 c_VT =           0.09; % VT volume coeffieient Initial Guess: 0.09 per Raymer pg. 160 and Martinelli
-% L_HT =   0.45 * L_fus; % ft, H tail moment arm : aft engine per Raymer 160: 0.45 * L_fus
-% L_VT =           L_HT; % ft, V tial moment arm, initial guess L_HT
 AR_HT =             4; % initial guess 4 Raymer, 113
 AR_VT =          0.95; % initial guess 0.95 Raymer, 113, T-Tail
 lambda_HT =      0.45; % initial guess 0.45 Raymer, 113
 lambda_VT =       0.8; % initial guess 0.8 Raymer, 113, T-Tail
-dihedral_W = 5 * rad; % rad, guess from Raymer Table 4.2 for low subsonic swept
-dihedral_HT = 0 * rad; % deg, keep zero for now
+dihedral_W =  5 * rad; % rad, guess from Raymer Table 4.2 for low subsonic swept
+dihedral_HT = 5 * rad; % deg, guess same as wing
 sweep_LE_W = 30 * rad; % rad, guess assuming M=8 from Raymer fig 4.19
 sweep_LE_HT= 30 * rad; % rad, guess assuming M=8 from Raymer fig 4.19
 sweep_LE_VT= 30 * rad; % rad, guess assuming M=8 from Raymer fig 4.19
@@ -62,7 +60,7 @@ if table_F == 1
 end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% Size Wings and Tails
+% Size Wings and Tails Initially
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 [b_W, C_root_W, C_tip_W, C_bar_W, Y_bar_W, b_HT, C_root_HT, ...
     C_tip_HT, C_bar_HT, Y_bar_HT, b_VT, C_root_VT, C_tip_VT, C_bar_VT, ...
@@ -72,7 +70,26 @@ end
 [sweep_c_W, sweep_TE_W] = sweep(b_W, sweep_LE_W, C_root_W, C_tip_W);
 [sweep_c_HT, sweep_TE_HT] = sweep(b_HT, sweep_LE_HT, C_root_HT, C_tip_HT);
 [sweep_c_VT, sweep_TE_VT] =sweep(2*b_VT, sweep_LE_VT, C_root_VT, C_tip_VT);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+% Fix moment arm of Horizontail Tail and its geometries if T tail
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+if T_Tail == 1
+    dL = b_VT * tan(sweep_c_VT); % difference between L_VT and where H_VT should be
+    error = abs(L_HT - L_VT) - dL; % difference between actual and needed L
+    L_HT = L_VT + dL; % set L_HT to where it should be
+    [b_W, C_root_W, C_tip_W, C_bar_W, Y_bar_W, b_HT, C_root_HT, ...
+    C_tip_HT, C_bar_HT, Y_bar_HT, b_VT, C_root_VT, C_tip_VT, C_bar_VT, ...
+    Y_bar_VT] = Wing_and_Tail_Sizing(S_W, lambda_W, AR_W, c_HT, ...
+    L_HT, AR_HT, lambda_HT, c_VT, L_VT, AR_VT, lambda_VT, T_Tail);
+                      % calculate properties based on new L_HT
+    [sweep_c_VT, sweep_TE_VT] =sweep(2*b_VT, sweep_LE_VT, C_root_VT, C_tip_VT);
+                      % calculate sweep from new L_HT                
+end  
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Output Table for Wing Surfaces
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Wingtype = {'Wing'; 'Horizontal Tail'; 'Vertical Tail'};
 Span = [b_W; b_HT; b_VT];
 Root_Chord = [C_root_W; C_root_HT; C_root_VT];
@@ -82,17 +99,18 @@ Y_MAC = [Y_bar_W; Y_bar_HT; Y_bar_VT];
 LE_Sweep_deg = [sweep_LE_W / rad; sweep_LE_HT/ rad; sweep_LE_VT/ rad];
 Quarter_C_Sweep_deg = [sweep_c_W/ rad; sweep_c_HT/ rad; sweep_c_VT/ rad];
 TE_Sweep_deg = [sweep_TE_W/ rad; sweep_TE_HT/ rad; sweep_TE_VT/ rad];
-% Dihedral
+L = [0; L_HT; L_VT]; % Length from wing 1/4 MAC to 1/4 MAC of surface
+Dihedral = [dihedral_W; dihedral_HT; 0]; 
 
 T = table(Span, Root_Chord, Tip_Chord, MAC, Y_MAC, LE_Sweep_deg, ...
-    Quarter_C_Sweep_deg,TE_Sweep_deg, 'RowNames', Wingtype);
+    Quarter_C_Sweep_deg,TE_Sweep_deg, L, Dihedral, 'RowNames', Wingtype);
 if table_W == 1
     T
 end
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-
-
+% Determine Trailing edge and Quarter Chord Sweeps geometrically
 function [sweep_c, sweep_TE] = sweep(b, sweep_LE, C_root, C_tip)
 z = b/2 * tan(sweep_LE);
 x = z - (C_root / 4);
