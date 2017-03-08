@@ -1,7 +1,11 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Leif Fredericks and Madeline Travnik
 % MAE 332 - Preliminary Sizings 
-% Dependencies: Wing_and_Tail_Sizing.m, Fuselage_Sizing.m, 
+% Dependencies: Wing_and_Tail_Sizing.m, Fuselage_Sizing.m
+% Modified: 03/08/2017 by Jan Bernhard
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+function main
+clear;close all
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 rad =       0.0174533; % radian conversion
 % Choose Configurations
@@ -28,7 +32,7 @@ C =              0.43; % From Table 6.4 Raymer, varies with type of aircraft
 Wo =            13000; % lb ---just an estimate, needs to be input from weight calcs.
 fineness =          6; % length/(max diameter), 3 recommended by Raymer for subsonic aircraft... 
                        % but 6 is more realistic for commercial 
-upsweep = .436 % rad = 25 deg, max upsweep per Raymer
+upsweep = .436; % rad = 25 deg, max upsweep per Raymer
 L_cockpit = 100/12; % ft
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Wing surface parameters from Raymer / Martinelli
@@ -51,14 +55,14 @@ sweep_LE_VT= 30 * rad; % rad, guess assuming M=8 from Raymer fig 4.19
 
 % Fuselage Sizing
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-[L_fus, D_max_fus, L_HT, V_fus] = Fuselage_Sizing(a,C,Wo,fineness,L_cockpit,upsweep) 
+[L_fus, D_max_fus, L_HT, V_fus] = Fuselage_Sizing(a,C,Wo,fineness,L_cockpit,upsweep);
 
 L_VT = L_HT; % ft, V tial moment arm, initial guess L_HT
 Fuselage_Parameter = [L_fus;D_max_fus;V_fus];
 fus_param_names = {'Length','Max Diameter','Volume Fuselage'};
 F = table(Fuselage_Parameter, 'RowNames', fus_param_names);
 if table_F == 1
-    F
+    F;
 end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -107,10 +111,10 @@ Dihedral = [dihedral_W; dihedral_HT; 0];
 T = table(Span, Root_Chord, Tip_Chord, MAC, Y_MAC, LE_Sweep_deg, ...
     Quarter_C_Sweep_deg,TE_Sweep_deg, L, Dihedral, 'RowNames', Wingtype);
 if table_W == 1
-    T
+    disp(T);
 end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+end
 
 % Determine Trailing edge and Quarter Chord Sweeps geometrically
 function [sweep_c, sweep_TE] = sweep(b, sweep_LE, C_root, C_tip)

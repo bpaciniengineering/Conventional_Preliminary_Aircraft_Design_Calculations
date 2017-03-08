@@ -9,7 +9,7 @@
 % and volume of fuselage (using top and side area estimations).
 
 function [L_fus, D_max_fus, L_HT, V_fus] = ...
-                fuselage_sizing(a,C,Wo,fineness,L_cockpit,upsweep);
+                fuselage_sizing(a,C,Wo,fineness,L_cockpit,upsweep)
 
 L_fus = a*Wo^C; % ft
 D_max_fus = L_fus/fineness; % ft
@@ -31,3 +31,5 @@ A_side = D_max_fus*L_fus-(.5*D_max_fus*L_fus_angled)-...
                      
 % Volume Calculation
 V_fus = 3.4 * A_top * A_side / (4*L_fus);
+end
+
