@@ -33,8 +33,8 @@ fineness =          6; % length/(max diameter), 3 recommended by Raymer for subs
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 c_HT =            0.9; % HT volume coefficient, Martinelli 0.9 Bizjet 1.00 transport
 c_VT =           0.09; % VT volume coeffieient Initial Guess: 0.09 per Raymer pg. 160 and Martinelli
-L_HT =   0.45 * L_fus; % ft, H tail moment arm : aft engine per Raymer 160: 0.45 * L_fus
-L_VT =           L_HT; % ft, V tial moment arm, initial guess L_HT
+% L_HT =   0.45 * L_fus; % ft, H tail moment arm : aft engine per Raymer 160: 0.45 * L_fus
+% L_VT =           L_HT; % ft, V tial moment arm, initial guess L_HT
 AR_HT =             4; % initial guess 4 Raymer, 113
 AR_VT =          0.95; % initial guess 0.95 Raymer, 113, T-Tail
 lambda_HT =      0.45; % initial guess 0.45 Raymer, 113
@@ -51,8 +51,9 @@ sweep_LE_VT= 30 * rad; % rad, guess assuming M=8 from Raymer fig 4.19
 
 % Fuselage Sizing
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-[L_fus, D_max_fus] =  Fuselage_Sizing(a, C, Wo, fineness); % ft fuselage length and max diameter
+[L_fus, D_max_fus, L_HT] =  Fuselage_Sizing(a, C, Wo, fineness); % ft fuselage length and max diameter
 
+L_VT = L_HT; % ft, V tial moment arm, initial guess L_HT
 Fuselage_Parameter = [L_fus;D_max_fus];
 fus_param_names = {'Length','Max Diameter'};
 F = table(Fuselage_Parameter, 'RowNames', fus_param_names);
