@@ -26,7 +26,8 @@ AR_W =              8; % initial guess
 a =              0.67; % From Table 6.4 Raymer, varies with type of aircraft
 C =              0.43; % From Table 6.4 Raymer, varies with type of aircraft
 Wo =            13000; % lb ---just an estimate, needs to be input from weight calcs.
-fineness =          3; % length/(max diameter), 3 recommended by Raymer for subsonic aircraft
+fineness =          6; % length/(max diameter), 3 recommended by Raymer for subsonic aircraft... 
+                       % but 6 is more realistic for commercial 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Wing surface parameters from Raymer / Martinelli
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
