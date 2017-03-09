@@ -188,15 +188,15 @@ WS_landing = (L_landing - 50/tan(deg2rad(theta_app)))*sigma*Clmax_land/79.4;
 % Plot everything on carpet plot
 
 % plot rectangles first so they're in back
-rectangle('Position', [WS_stall carpet_y_lim(1) ...
-    (carpet_x_lim(2)) carpet_y_lim(2)], 'FaceColor', [1 0 0]);
+rectangle('Position', [WS_landing carpet_y_lim(1) ...
+    (carpet_x_lim(2)) carpet_y_lim(2)], 'FaceColor', [0 1 1]);
 rectangle('Position', [carpet_x_lim(1) carpet_y_lim(1) ...
-    (WS_landing-carpet_x_lim(1)) carpet_y_lim(2)], 'FaceColor', [0 1 1]);
+    (WS_stall-carpet_x_lim(1)) carpet_y_lim(2)], 'FaceColor', [1 1 0]);
 
 % Takeoff
 area(WS, TW_takeoff1, 'FaceColor', 'b');
 % Stall
-line([WS_stall WS_stall],get(hax,'YLim'),'Color',[1 0 0]);
+line([WS_stall WS_stall],get(hax,'YLim'),'Color',[1 1 0]);
 % Climb
 %plot(WS, TW_climb, 'm'); % REQUIRED THRUST LOADING IS TOO HIGH
 % Cruise
