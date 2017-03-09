@@ -62,7 +62,7 @@ Fuselage_Parameter = [L_fus;D_max_fus;V_fus];
 fus_param_names = {'Length','Max Diameter','Volume Fuselage'};
 F = table(Fuselage_Parameter, 'RowNames', fus_param_names);
 if table_F == 1
-    F;
+    disp(F);
 end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
