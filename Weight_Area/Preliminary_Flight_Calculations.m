@@ -206,6 +206,7 @@ ylim(carpet_y_lim)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % OUTPUT TO TEXT FILE
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%{
 text = sprintf('Preliminary Aircraft Design Calculations - %s.txt',...
     Trial_Name);
 fid = fopen(text,'w');
@@ -221,3 +222,4 @@ fprintf(fid, sprintf('%0.0f Fuel Weight', W_fuel));
 fprintf(fid, sprintf('\n')); 
 fprintf(fid, sprintf('%0.0f Empty Weight', W_empty));
 fprintf(fid, sprintf('\n')); 
+%}
