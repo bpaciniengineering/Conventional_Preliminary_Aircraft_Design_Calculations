@@ -18,12 +18,9 @@ altitude = altitude*0.3048;
 V_cruise = M_cruise*(soundSpeed);
 % convert nm to miles
 R = R*1.15078;
-% Weight payload
-if baggage(2) == 0
-    W_pay = (passengers + crew)*(200) + (passengers + crew)*(baggage(1));
-else
-    W_pay = (passengers + crew)*(200) + (baggage(1));
-end
+% Weight payload (1 = baggage per person, 2 = additional cargo)
+W_pay = (passengers+crew)*(200) + (passengers+crew)*baggage(1) + baggage(2);
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Ratio Calculations
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
