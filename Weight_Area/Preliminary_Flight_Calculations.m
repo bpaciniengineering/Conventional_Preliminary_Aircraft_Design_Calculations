@@ -124,9 +124,6 @@ WS = linspace(1,200);
 TW_takeoff = ((20.9.*WS)/(sigma*Clmax_to)).*...
     (L_takeoff-69.6.*(WS./(sigma*Clmax_to)).^(.5)).^(-1);
 
-plot(WS, TW_takeoff, 'b--');
-line([WS_stall WS_stall],get(hax,'YLim'),'Color',[1 0 0]);
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Take-off - revised to include full take-off field length
 index = (-28.43 + sqrt(28.43^2 - 4*(857.4-L_takeoff)*0.0185))/(2*0.0185);
@@ -156,8 +153,6 @@ alpha_climb = calculate_alpha(temp_climb, airPres_climb, temp_sl, airPres_sl, ..
 TW_climb = (beta_climb/alpha_climb).*(K1_c*(beta_climb/q_climb)*WS + K2_c + ...
     (C_D0_c + C_DR_c)./((beta_climb/q_climb)*WS) + (1/V_climb)*(dHdt));
 
-%plot(WS, TW_climb, 'm'); % REQUIRED THRUST LOADING IS TOO HIGH
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Cruise-performance
 
@@ -173,8 +168,6 @@ alpha_c = calculate_alpha(temp_c, airPres_c, temp_sl, airPres_sl, ...
 TW_cruise = (beta_c/alpha_c)*(K1_c*beta_c*WS/q_c + K2_c + ...
     (C_D0_c+C_DR_c)./(beta_c*WS/q_c));
 
-plot(WS, TW_cruise, 'g');
-
 %n = sqrt(1 + ((V^2))/g*R); % - here we assume n = 1 (no turning)
 
 %TW_CLT = (beta/alpha)*(k1*n^2*(beta/q)*WS + k2*n + ...
@@ -189,15 +182,32 @@ beta_l = calculate_beta('loiter', R, loiter_dur, 0, ...
 % Landing
 
 WS_landing = (L_landing - 50/tan(deg2rad(theta_app)))*sigma*Clmax_land/79.4;
-line([WS_landing WS_landing], get(hax,'YLim'),'Color',[0 1 1]);
-
 %WS_landing = ((sigma * Clmax_land)/(79.4)) *(SL  - 50/tan(theta))
 
-%plot(WS, TW_landing);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Plot everything on carpet plot
+
+% plot rectangles first so they're in back
+rectangle('Position', [WS_landing carpet_y_lim(1) ...
+    (carpet_x_lim(2)) carpet_y_lim(2)], 'FaceColor', [0 1 1]);
+rectangle('Position', [carpet_x_lim(1) carpet_y_lim(1) ...
+    (WS_stall-carpet_x_lim(1)) carpet_y_lim(2)], 'FaceColor', [1 1 0]);
+
+% Takeoff
+area(WS, TW_takeoff1, 'FaceColor', 'b');
+% Stall
+line([WS_stall WS_stall],get(hax,'YLim'),'Color',[1 1 0]);
+% Climb
+%plot(WS, TW_climb, 'm'); % REQUIRED THRUST LOADING IS TOO HIGH
+% Cruise
+area(WS, TW_cruise, 'FaceColor', 'g');
+% Landing
+line([WS_landing WS_landing], get(hax,'YLim'),'Color',[0 1 1]);
+alpha(0.5); % transparency
+
 title('Constraint Plane (T/W - W/S)');
 xlabel('Wing Loading [W_g/S], lb/ft^2');
 ylabel('Thrust Loading [T_0/W_g]');
-line([WS_stall WS_stall],get(hax,'YLim'),'Color',[1 0 0]);
 xlim(carpet_x_lim)
 ylim(carpet_y_lim)
 
