@@ -23,14 +23,14 @@ clear all;
 Trial_Name  = 'Trial 1' ;
 Description = ''        ;
 
-M_cruise    = 0.78       ;
-R           = 3900      ; %nm
-AR          = 9         ; %assume about 8                       %ESTIMATE
+M_cruise    = 0.85       ;
+R           = 6500      ; %nm
+AR          = 8         ; %assume about 8                       %ESTIMATE
 e           = 0.8       ; %Oswald efficiency factor, assume 0.8 (Raymer 92)
 tsfc        = 0.576     ; %0.45<=tsfc<=1.2 - check engine manufacturer
-altitude_ci = 39000     ; %cruise altitude, ft
-altitude_fi = 0000      ; % airfield alitude, ft
-passengers  = 290       ; %persons
+altitude_ci = 35000     ; %cruise altitude, ft
+altitude_fi = 0         ; % airfield alitude, ft
+passengers  = 200       ; %persons
 crew        = 10        ; %persons
 baggage     = [50 0]    ; %lbs allotment passenger or crew
 loiter_dur  = 0         ; %hrs
@@ -38,12 +38,12 @@ loiter_dur  = 0         ; %hrs
 weight_max  = 1e6       ; %max of weight range
 graph       = 1         ; %1/0 for plot on/off
 
-V_stall     = 137       ; %knots - better estimate possible?
 V_approach  = 150       ; %knots
+V_stall     = V_approach/1.3; %knots
 Clmax_to    = 1.80      ; %assumed
 Clmax_land  = 2.10      ; %assumed
 L_takeoff   = 10500     ; %ft REQUIREMENT
-L_landing   = 3600      ; %ft REQUIREMENT
+L_landing   = 4800      ; %ft estimate
 M_climb     = M_cruise  ; %for now (see aircraft_mass.m)
 rate_climb  = 2000      ; %ft/min
 altitude_climbi = altitude_ci ; %ft, for now (see aircraft_mass.m)
@@ -58,7 +58,7 @@ gamma       = 1.4       ; % specific heat ratio cp/cv, for air
 TR          = 1         ; % assumed
 g           = 32.174    ; %ft/s^2
 
-carpet_x_lim = [50 125];
+carpet_x_lim = [50 150];
 carpet_y_lim = [0 1];
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%DO NOT MODIFY BELOW THIS POINT%%%%%%%%%%%%%%%%%%%%%%%
