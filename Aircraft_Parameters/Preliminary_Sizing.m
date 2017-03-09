@@ -106,10 +106,10 @@ LE_Sweep_deg = [sweep_LE_W / rad; sweep_LE_HT/ rad; sweep_LE_VT/ rad];
 Quarter_C_Sweep_deg = [sweep_c_W/ rad; sweep_c_HT/ rad; sweep_c_VT/ rad];
 TE_Sweep_deg = [sweep_TE_W/ rad; sweep_TE_HT/ rad; sweep_TE_VT/ rad];
 L = [0; L_HT; L_VT]; % Length from wing 1/4 MAC to 1/4 MAC of surface
-Dihedral = [dihedral_W; dihedral_HT; 0]; 
+Dihedral_deg = [dihedral_W / rad; dihedral_HT / rad; 0]; 
 
 T = table(Span, Root_Chord, Tip_Chord, MAC, Y_MAC, LE_Sweep_deg, ...
-    Quarter_C_Sweep_deg,TE_Sweep_deg, L, Dihedral, 'RowNames', Wingtype);
+    Quarter_C_Sweep_deg,TE_Sweep_deg, L, Dihedral_deg, 'RowNames', Wingtype);
 if table_W == 1
     disp(T);
 end
