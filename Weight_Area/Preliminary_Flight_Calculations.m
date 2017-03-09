@@ -32,14 +32,14 @@ altitude_ci = 39000     ; %cruise altitude, ft
 altitude_fi = 0000      ; % airfield alitude, ft
 passengers  = 290       ; %persons
 crew        = 10        ; %persons
-baggage     = [50 0]    ; %lbs allotment passenger or crew
+baggage     = [50 4000] ; %lbs [allotment per person, additional cargo]
 loiter_dur  = 0         ; %hrs
 
 weight_max  = 1e6       ; %max of weight range
 graph       = 1         ; %1/0 for plot on/off
 
-V_stall     = 137       ; %knots - better estimate possible?
 V_approach  = 150       ; %knots
+V_stall = V_approach/1.3; %knots, based on approach speed estimate
 Clmax_to    = 1.80      ; %assumed
 Clmax_land  = 2.10      ; %assumed
 L_takeoff   = 10500     ; %ft REQUIREMENT
