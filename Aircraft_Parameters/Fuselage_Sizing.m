@@ -1,8 +1,8 @@
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Fuselage Sizing Code - MAE 332
-% Madeline Travnik
-% 3 March 2017
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Fuselage Sizing Code - MAE 332                 %
+% Madeline Travnik and Jesús Serrano Cendejas    %
+% 3 March 2017                                   %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Requires a, C, Wo, fineness ratio, length of cockpit, and upsweep angle.
 % Returns fuselage length, maximum fuselage diameter, moment arm of horizontal tail,
