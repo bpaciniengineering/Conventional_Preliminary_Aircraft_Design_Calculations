@@ -82,7 +82,6 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 if T_Tail == 1
     dL = b_VT * tan(sweep_c_VT); % difference between L_VT and where H_VT should be
-    error = abs(L_HT - L_VT) - dL; % difference between actual and needed L
     L_HT = L_VT + dL; % set L_HT to where it should be
     [b_W, C_root_W, C_tip_W, C_bar_W, Y_bar_W, b_HT, C_root_HT, ...
     C_tip_HT, C_bar_HT, Y_bar_HT, b_VT, C_root_VT, C_tip_VT, C_bar_VT, ...
