@@ -33,7 +33,7 @@ Wo =            13000; % lb ---just an estimate, needs to be input from weight c
 fineness =          6; % length/(max diameter), 3 recommended by Raymer for subsonic aircraft... 
                        % but 6 is more realistic for commercial 
 upsweep = .436; % rad = 25 deg, max upsweep per Raymer
-L_cockpit = 130/12; % ft
+L_cockpit = 100/12; % ft
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Wing surface parameters from Raymer / Martinelli
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -93,6 +93,14 @@ if T_Tail == 1
 end  
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+% Find Leading Edge distance from wing root chord Leading Edge
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+X_LE_HT = Y_bar_W*tan(sweep_LE_W) + C_bar_W/4 + L_HT - [Y_bar_HT * ...
+    tan(sweep_LE_HT) + C_bar_HT/4];
+X_LE_VT = Y_bar_W*tan(sweep_LE_W) + C_bar_W/4 + L_VT - [Y_bar_VT * ...
+    tan(sweep_LE_VT) + C_bar_VT/4];
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 % Output Table for Wing Surfaces
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Wingtype = {'Wing'; 'Horizontal Tail'; 'Vertical Tail'};
@@ -105,10 +113,12 @@ LE_Sweep_deg = [sweep_LE_W / rad; sweep_LE_HT/ rad; sweep_LE_VT/ rad];
 Quarter_C_Sweep_deg = [sweep_c_W/ rad; sweep_c_HT/ rad; sweep_c_VT/ rad];
 TE_Sweep_deg = [sweep_TE_W/ rad; sweep_TE_HT/ rad; sweep_TE_VT/ rad];
 L = [0; L_HT; L_VT]; % Length from wing 1/4 MAC to 1/4 MAC of surface
+X_LE = [0; X_LE_HT; X_LE_VT]; % X position from wing root chord leading edge 
 Dihedral_deg = [dihedral_W / rad; dihedral_HT / rad; 0]; 
 
 T = table(Span, Root_Chord, Tip_Chord, MAC, Y_MAC, LE_Sweep_deg, ...
-    Quarter_C_Sweep_deg,TE_Sweep_deg, L, Dihedral_deg, 'RowNames', Wingtype);
+    Quarter_C_Sweep_deg,TE_Sweep_deg, L, X_LE, Dihedral_deg, 'RowNames',...
+    Wingtype);
 if table_W == 1
     disp(T);
 end
@@ -123,3 +133,4 @@ y = x + (C_tip / 4);
 sweep_c = atan(y/(b/2));
 sweep_TE = atan((z + C_tip - C_root) / (b/2));
 end
+
