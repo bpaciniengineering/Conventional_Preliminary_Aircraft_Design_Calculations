@@ -33,7 +33,7 @@ Wo =            13000; % lb ---just an estimate, needs to be input from weight c
 fineness =          6; % length/(max diameter), 3 recommended by Raymer for subsonic aircraft... 
                        % but 6 is more realistic for commercial 
 upsweep = .436; % rad = 25 deg, max upsweep per Raymer
-L_cockpit = 100/12; % ft
+L_cockpit = 130/12; % ft
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Wing surface parameters from Raymer / Martinelli
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
