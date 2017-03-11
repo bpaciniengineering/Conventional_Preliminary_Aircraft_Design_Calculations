@@ -29,8 +29,8 @@ AR_W =              8; % initial guess
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 a =              0.67; % From Table 6.4 Raymer, varies with type of aircraft
 C =              0.43; % From Table 6.4 Raymer, varies with type of aircraft
-Wo =            487751; % lb ---just an estimate, needs to be input from weight calcs.
-fineness =          6; % length/(max diameter), 3 recommended by Raymer for subsonic aircraft... 
+Wo =           487751; % lb ---just an estimate, needs to be input from weight calcs.
+fineness =         10; % length/(max diameter), 3 recommended by Raymer for subsonic aircraft... 
                        % but 6 is more realistic for commercial 
 upsweep = deg2rad(15); % rad = 25 deg, max upsweep per Raymer
 % http://mail.tku.edu.tw/095980/fuselage.pdf has upsweep around 14 degrees
@@ -39,17 +39,17 @@ L_cockpit = 130/12; % ft (Raymer p. 185, 2 crew cockpit)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Wing surface parameters from Raymer / Martinelli
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-c_HT =            1.0; % HT volume coefficient, Martinelli 0.9 Bizjet 1.00 transport
-c_VT =           0.09; % VT volume coeffieient Initial Guess: 0.09 per Raymer pg. 160 and Martinelli
+c_HT =           0.65; % HT volume coefficient
+c_VT =          0.054; % VT volume coeffieient http://adg.stanford.edu/aa241/stability/taildesign.html
 AR_HT =             4; % initial guess 4 Raymer, 76
 AR_VT =          1.65; % initial guess 0.95 Raymer, 76 (T-tail), 1.65 (other)
-lambda_HT =      0.45; % initial guess 0.45 Raymer, 76
+lambda_HT =      0.40; % initial guess 0.45 Raymer, 76 (also 767)
 lambda_VT =      0.45; % initial guess 0.8 Raymer, 76, T-Tail, 0.45 (other)
 dihedral_W =  5 * rad; % rad, guess from Raymer Table 4.2 for low subsonic swept
 dihedral_HT = 5 * rad; % deg, guess same as wing
 sweep_LE_W = 30 * rad; % rad, guess assuming M=.8 from Raymer fig 4.19
-sweep_LE_HT= 30 * rad; % rad, guess assuming M=.8 from Raymer fig 4.19
-sweep_LE_VT= 30 * rad; % rad, guess assuming M=.8 from Raymer fig 4.19
+sweep_LE_HT= 45 * rad; % rad, guess assuming M=.8 from Raymer fig 4.19
+sweep_LE_VT= 35 * rad; % rad, guess assuming M=.8 from Raymer fig 4.19
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -59,7 +59,7 @@ sweep_LE_VT= 30 * rad; % rad, guess assuming M=.8 from Raymer fig 4.19
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 [L_fus, D_max_fus, L_HT, V_fus] = Fuselage_Sizing(a,C,Wo,fineness,L_cockpit,upsweep);
 
-L_VT = L_HT; % ft, V tial moment arm, initial guess L_HT
+L_VT = L_HT; % ft, V tail moment arm, initial guess L_HT
 Fuselage_Parameter = [L_fus;D_max_fus;V_fus];
 fus_param_names = {'Length','Max Diameter','Volume Fuselage'};
 F = table(Fuselage_Parameter, 'RowNames', fus_param_names);
