@@ -26,7 +26,7 @@ Description = ''        ;
 M_cruise    = 0.85       ;
 R           = 6500      ; %nm
 AR          = 8         ; %assume about 8                       %ESTIMATE
-e           = 0.8       ; %Oswald efficiency factor, assume 0.8 (Raymer 92)
+e           = 4.61*(1-0.045*AR^0.68)*cos(deg2rad(30))^0.15-3.1; %Oswald efficiency factor (Raymer 299)
 tsfc        = 0.576     ; %0.45<=tsfc<=1.2 - check engine manufacturer
 altitude_ci = 35000     ; %cruise altitude, ft
 altitude_fi = 0         ; % airfield alitude, ft
@@ -40,8 +40,9 @@ graph       = 1         ; %1/0 for plot on/off
 
 V_approach  = 150       ; %knots
 V_stall = V_approach/1.3; %knots, based on approach speed estimate
-Clmax_to    = 1.80      ; %assumed
-Clmax_land  = 2.10      ; %assumed
+Clmax       = 1.346     ; % from VSPAERO
+Clmax_to    = Clmax+0.54; % 60 percent of flap correction (Raymer 279)
+Clmax_land  = Clmax+0.90; % trailing edge flap correction (Raymer 279)
 L_takeoff   = 10500     ; %ft REQUIREMENT
 L_landing   = 4800      ; %ft estimate
 M_climb     = M_cruise  ; %for now (see aircraft_mass.m)
@@ -50,7 +51,7 @@ altitude_climbi = altitude_ci ; %ft, for now (see aircraft_mass.m)
 theta_app   = 3         ; %approach angle, deg
 
 % cruise parameters
-C_D0_c      = 0.02      ; % assumed (at cruise)
+C_D0_c      = 0.02188   ; % from VSPAERO
 C_DR_c      = 0         ; % assumed (clean configuration at cruise)
 K1_c        = 1/(pi*AR*e); % induced drag correction factor
 K2_c        = 0         ; % viscous drag correction factor
@@ -58,8 +59,12 @@ gamma       = 1.4       ; % specific heat ratio cp/cv, for air
 TR          = 1         ; % assumed
 g           = 32.174    ; %ft/s^2
 
-carpet_x_lim = [50 150];
-carpet_y_lim = [0 1];
+% final parameters
+T_vsp = 84700*2;    % lbf
+S_vsp = 5134.239;   % ft^2
+
+carpet_x_lim = [70 150];
+carpet_y_lim = [0 0.7];
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%DO NOT MODIFY BELOW THIS POINT%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -132,7 +137,7 @@ index = (-28.43 + sqrt(28.43^2 - 4*(857.4-L_takeoff)*0.0185))/(2*0.0185);
 
 TW_takeoff1 = WS / (sigma*Clmax_to*index);
 %TW_takeoff2 = WS / (sigma*Clmax_to*index2);
-plot(WS, TW_takeoff1, 'b');
+%plot(WS, TW_takeoff1, 'b');
 %plot(WS, TW_takeoff2, 'c--');
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -205,12 +210,15 @@ area(WS, TW_cruise, 'FaceColor', 'g');
 line([WS_landing WS_landing], get(hax,'YLim'),'Color',[0 1 1]);
 alpha(0.5); % transparency
 
+% Chosen point
+plot(W_TO/S_vsp, T_vsp/W_TO, 'r.', 'markers', 20);
+
 title('Constraint Plane (T/W - W/S)');
 xlabel('Wing Loading [W_g/S], lb/ft^2');
 ylabel('Thrust Loading [T_0/W_g]');
 xlim(carpet_x_lim)
 ylim(carpet_y_lim)
-
+legend('Takeoff', 'Stall', 'Cruise', 'Landing', 'Selection');
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

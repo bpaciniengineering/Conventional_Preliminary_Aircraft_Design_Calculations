@@ -31,18 +31,18 @@ a =              0.67; % From Table 6.4 Raymer, varies with type of aircraft
 C =              0.43; % From Table 6.4 Raymer, varies with type of aircraft
 TW =             0.35; % From weight calculation scripts
 T_engine =      84700; % lbf (GE90-85B turbofan)
-Wo =    2*T_engine/TW; % lbf (not same as takeoff weight from sizing script)
+Wo =    2*T_engine/TW % lbf (not same as takeoff weight from sizing script)
 fineness =         10; % length/(max diameter), 3 recommended by Raymer for subsonic aircraft... 
                        % but 6 is more realistic for commercial 
 upsweep = deg2rad(15); % rad = 25 deg, max upsweep per Raymer
 % http://mail.tku.edu.tw/095980/fuselage.pdf has upsweep around 14 degrees
-L_cockpit = 130/12; % ft (Raymer p. 185, 2 crew cockpit)
+L_cockpit = 130/12; % ft (Raymer p. 185, 3 crew cockpit)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Wing surface parameters from Raymer / Martinelli
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 c_HT =           0.65; % HT volume coefficient
-c_VT =          0.054; % VT volume coeffieient http://adg.stanford.edu/aa241/stability/taildesign.html
+c_VT =          0.054; % VT volume coefficient http://adg.stanford.edu/aa241/stability/taildesign.html
 AR_HT =             4; % initial guess 4 Raymer, 76
 AR_VT =          1.65; % initial guess 0.95 Raymer, 76 (T-tail), 1.65 (other)
 lambda_HT =      0.40; % initial guess 0.45 Raymer, 76 (also 767)
