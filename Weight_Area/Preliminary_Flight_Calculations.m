@@ -27,20 +27,20 @@ M_cruise    = 0.85       ;
 R           = 6500      ; %nm
 AR          = 8         ; %assume about 8                       %ESTIMATE
 e           = 4.61*(1-0.045*AR^0.68)*cos(deg2rad(30))^0.15-3.1; %Oswald efficiency factor (Raymer 299)
-tsfc        = 0.576     ; %0.45<=tsfc<=1.2 - check engine manufacturer
+tsfc        = 0.52      ; %0.45<=tsfc<=1.2 - check engine manufacturer
 altitude_ci = 35000     ; %cruise altitude, ft
 altitude_fi = 0         ; % airfield alitude, ft
 passengers  = 200       ; %persons
 crew        = 10        ; %persons
 baggage     = [50 4000] ; %lbs [allotment per person, additional cargo]
-loiter_dur  = 0         ; %hrs
+loiter_dur  = 1.0       ; %hrs
 
 weight_max  = 1e6       ; %max of weight range
 graph       = 1         ; %1/0 for plot on/off
 
 V_approach  = 150       ; %knots
 V_stall = V_approach/1.3; %knots, based on approach speed estimate
-Clmax       = 1.346     ; % from VSPAERO
+Clmax       = 1.365     ; % from VSPAERO
 Clmax_to    = Clmax+0.54; % 60 percent of flap correction (Raymer 279)
 Clmax_land  = Clmax+0.90; % trailing edge flap correction (Raymer 279)
 L_takeoff   = 10500     ; %ft REQUIREMENT
@@ -51,7 +51,7 @@ altitude_climbi = altitude_ci ; %ft, for now (see aircraft_mass.m)
 theta_app   = 3         ; %approach angle, deg
 
 % cruise parameters
-C_D0_c      = 0.02188   ; % from VSPAERO
+C_D0_c      = 0.02281   ; % from VSPAERO
 C_DR_c      = 0         ; % assumed (clean configuration at cruise)
 K1_c        = 1/(pi*AR*e); % induced drag correction factor
 K2_c        = 0         ; % viscous drag correction factor
@@ -61,7 +61,7 @@ g           = 32.174    ; %ft/s^2
 
 % final parameters
 T_vsp = 84700*2;    % lbf
-S_vsp = 5134.239;   % ft^2
+S_vsp = 4584.558;   % ft^2
 
 carpet_x_lim = [70 150];
 carpet_y_lim = [0 0.7];

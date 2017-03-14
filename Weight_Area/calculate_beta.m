@@ -37,7 +37,7 @@ switch ID
         beta = 1/(exp(R*((tsfc/V))/(L_D)));
         
     case 'loiter'
-        %LD_max = 0.5*sqrt(pi*e*AR/C_D0);
+        %LD_max = 0.5*sqrt(pi*e*AR/C_D0)
         LD_max = L_D / 0.94;
         beta = 1/(exp((E*tsfc)/LD_max));
         

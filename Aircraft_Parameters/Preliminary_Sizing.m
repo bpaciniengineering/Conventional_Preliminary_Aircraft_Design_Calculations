@@ -21,7 +21,7 @@ table_W =           1; % 0/1  wings & tails geometry table  off/on
 
 % Outside parameters
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-S_W =             5134.22; % ft^2, Wing suraface area guess based on Cessna CJ3
+S_W =             4584.6112; % ft^2
 lambda_W =        0.3; % taper ratio,per Raymer 83,assuming LE sweep is appx 30 deg
 AR_W =              8; % initial guess
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -30,7 +30,7 @@ AR_W =              8; % initial guess
 a =              0.67; % From Table 6.4 Raymer, varies with type of aircraft
 C =              0.43; % From Table 6.4 Raymer, varies with type of aircraft
 TW =             0.35; % From weight calculation scripts
-T_engine =      84700; % lbf (GE90-85B turbofan)
+T_engine =      84700; % lbf (GE90-90B turbofan)
 Wo =    2*T_engine/TW % lbf (not same as takeoff weight from sizing script)
 fineness =         10; % length/(max diameter), 3 recommended by Raymer for subsonic aircraft... 
                        % but 6 is more realistic for commercial 
@@ -50,8 +50,8 @@ lambda_VT =      0.45; % initial guess 0.8 Raymer, 76, T-Tail, 0.45 (other)
 dihedral_W =  5 * rad; % rad, guess from Raymer Table 4.2 for low subsonic swept
 dihedral_HT = 2 * rad; % deg, guess same as wing
 sweep_LE_W = 30 * rad; % rad, guess assuming M=.8 from Raymer fig 4.19
-sweep_LE_HT= 45 * rad; % rad, guess assuming M=.8 from Raymer fig 4.19
-sweep_LE_VT= 35 * rad; % rad, guess assuming M=.8 from Raymer fig 4.19
+sweep_LE_HT= 35 * rad; % rad, guess assuming M=.8 from Raymer fig 4.19
+sweep_LE_VT= 40 * rad; % rad, guess assuming M=.8 from Raymer fig 4.19
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
