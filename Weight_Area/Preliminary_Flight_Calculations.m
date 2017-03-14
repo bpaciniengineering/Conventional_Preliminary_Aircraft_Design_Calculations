@@ -120,7 +120,8 @@ xlabel('Wing Loading [W_g/S], lb/ft^2');
 ylabel('Thrust Loading [T_0/W_g]');
 hold on;
 V_stall = V_stall * 1.68781; %convert to ft/s
-WS_stall = ((V_stall^2)*airDens_sli*Clmax_to)/(2*g);
+WS_stall_to = ((V_stall^2)*airDens_fi*Clmax_to)/(2*g);
+WS_stall_land = ((V_stall^2)*airDens_fi*Clmax_land)/(2*g);
 % Plotted later for cosmetic reasons
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -196,12 +197,12 @@ WS_landing = (L_landing - 50/tan(deg2rad(theta_app)))*sigma*Clmax_land/79.4;
 rectangle('Position', [WS_landing carpet_y_lim(1) ...
     (carpet_x_lim(2)) carpet_y_lim(2)], 'FaceColor', [0 1 1]);
 rectangle('Position', [carpet_x_lim(1) carpet_y_lim(1) ...
-    (WS_stall-carpet_x_lim(1)) carpet_y_lim(2)], 'FaceColor', [1 1 0]);
+    (WS_stall_land-carpet_x_lim(1)) carpet_y_lim(2)], 'FaceColor', [1 1 0]);
 
 % Takeoff
 area(WS, TW_takeoff1, 'FaceColor', 'b');
 % Stall
-line([WS_stall WS_stall],get(hax,'YLim'),'Color',[1 1 0]);
+line([WS_stall_to WS_stall_to],get(hax,'YLim'),'Color','k');
 % Climb
 %plot(WS, TW_climb, 'm'); % REQUIRED THRUST LOADING IS TOO HIGH
 % Cruise
