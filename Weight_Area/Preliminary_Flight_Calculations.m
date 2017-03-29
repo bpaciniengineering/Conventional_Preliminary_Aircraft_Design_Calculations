@@ -5,10 +5,11 @@
 %% Feb. 27, 2017 Thur                                                    %%
 %%                                                                       %%
 %% Description: This code will output preliminary aircraft design        %%
-%% calculations to a .txt file.                                          %%
+%% calculations to a .txt file and a carpet plot with constraints        %%
 %%                                                                       %%
-%% Extra Dependencies: | aircraft_mass.m | Atmos.m | calculate_alpha.m | %%
-%%    calculate_beta.m | convert_to_imperial.m | dynamic_pressure.m      %%
+%% Dependencies:| aircraft_mass.m | aircraft_surfacearea.m | Atmos.m |   %%
+%%              | calculate_alpha.m | calculate_beta.m | TS_converter.m |%% 
+%%              | convert_to_imperial.m | dynamic_pressure.m |           %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 close all;
 clear all;
@@ -118,6 +119,3 @@ fprintf(fid, sprintf('%0.0f Fuel Weight (lbm) \n', W_fuel));
 fprintf(fid, sprintf('%0.0f Empty Weight (lbm) \n \n', W_empty));
 fprintf(fid, sprintf('%0.0f Thrust (lbf) \n', thrust));
 fprintf(fid, sprintf('%0.0f Reference Area (ft^2)', s_ref));
-
-
-
