@@ -8,9 +8,9 @@
 % USE:  Converts coordinates of contraint plot into Surface area and Thrust 
 %       value.
 
-function [ S_ref, To ] = TS_converter( x, y, W_TO )
+function [ S_ref, To ] = TS_converter( wing_loading, thrust_loading, W_TO )
 
-S_ref = W_TO/x;
-To = y*W_TO;
+S_ref = W_TO/wing_loading;
+To = thrust_loading*W_TO;
 
 end

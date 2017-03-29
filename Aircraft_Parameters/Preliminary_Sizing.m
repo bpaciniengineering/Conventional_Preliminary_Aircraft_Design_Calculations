@@ -10,7 +10,7 @@ clear;close all
 rad =       0.0174533; % radian conversion
 % Choose Configurations
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-T_Tail =            1; % 0 if a conventional tail arrangement; 1 if T-Tail
+T_Tail =            0; % 0 if a conventional tail arrangement; 1 if T-Tail
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Output controls
@@ -21,28 +21,31 @@ table_W =           1; % 0/1  wings & tails geometry table  off/on
 
 % Outside parameters
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-S_W =             294; % ft^2, Wing suraface area guess based on Cessna CJ3
-lambda_W =        0.3; % taper ratio,per Raymer 83,assuming LE sweep is appx 30 deg
-AR_W =              8; % initial guess
+S_W =        2.8034e3; % ft^2, Wing suraface area guess based on Cessna CJ3
+lambda_W =        0.2; % taper ratio,per Raymer 83,assuming LE sweep is appx 30 deg
+AR_W =              8.1; % initial guess
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Fuselage parameters from Raymer and 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 a =              0.67; % From Table 6.4 Raymer, varies with type of aircraft
 C =              0.43; % From Table 6.4 Raymer, varies with type of aircraft
-Wo =            13000; % lb ---just an estimate, needs to be input from weight calcs.
-fineness =          6; % length/(max diameter), 3 recommended by Raymer for subsonic aircraft... 
+n =                 2;
+thrust =        70000;
+T_W =              .3;
+Wo =     n*thrust/T_W; % lb ---just an estimate, needs to be input from weight calcs.
+fineness =          8; % length/(max diameter), 3 recommended by Raymer for subsonic aircraft... 
                        % but 6 is more realistic for commercial 
-upsweep = .436; % rad = 25 deg, max upsweep per Raymer
-L_cockpit = 130/12; % ft
+upsweep =      25*rad; % rad = 25 deg, max upsweep per Raymer
+L_cockpit =    130/12; % ft
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Wing surface parameters from Raymer / Martinelli
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-c_HT =            0.9; % HT volume coefficient, Martinelli 0.9 Bizjet 1.00 transport
+c_HT =            1.0; % HT volume coefficient, Martinelli 0.9 Bizjet 1.00 transport
 c_VT =           0.09; % VT volume coeffieient Initial Guess: 0.09 per Raymer pg. 160 and Martinelli
 AR_HT =             4; % initial guess 4 Raymer, 113
-AR_VT =          0.95; % initial guess 0.95 Raymer, 113, T-Tail
+AR_VT =           1.8; % initial guess 0.95 Raymer, 113, T-Tail
 lambda_HT =      0.45; % initial guess 0.45 Raymer, 113
-lambda_VT =       0.8; % initial guess 0.8 Raymer, 113, T-Tail
+lambda_VT =       0.5; % initial guess 0.8 Raymer, 113, T-Tail
 dihedral_W =  5 * rad; % rad, guess from Raymer Table 4.2 for low subsonic swept
 dihedral_HT = 5 * rad; % deg, guess same as wing
 sweep_LE_W = 30 * rad; % rad, guess assuming M=8 from Raymer fig 4.19
