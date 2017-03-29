@@ -1,8 +1,8 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Bernardo Pacini                                                       %%
+%% Nathan Wei                                                            %%
 %% MAE 332 - Aircraft Design                                             %%
 %% Preliminary Design Calculations                                       %%
-%% Feb. 20, 2017 Mon                                                     %%
+%% 7 March 2017                                                          %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function alpha = calculate_alpha(temp, airPres, temp_sl, ...
     airPres_sl, gamma, M, TR)

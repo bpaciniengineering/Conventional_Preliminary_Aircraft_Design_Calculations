@@ -31,7 +31,7 @@ a =              0.67; % From Table 6.4 Raymer, varies with type of aircraft
 C =              0.43; % From Table 6.4 Raymer, varies with type of aircraft
 TW =             0.35; % From weight calculation scripts
 T_engine =      84700; % lbf (GE90-90B turbofan)
-Wo =    2*T_engine/TW % lbf (not same as takeoff weight from sizing script)
+Wo =    2*T_engine/TW; % lbf (not same as takeoff weight from sizing script)
 fineness =         10; % length/(max diameter), 3 recommended by Raymer for subsonic aircraft... 
                        % but 6 is more realistic for commercial 
 upsweep = deg2rad(15); % rad = 25 deg, max upsweep per Raymer

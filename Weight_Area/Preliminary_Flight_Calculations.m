@@ -30,7 +30,7 @@ e           = 4.61*(1-0.045*AR^0.68)*cos(deg2rad(30))^0.15-3.1; %Oswald efficien
 tsfc        = 0.52      ; %0.45<=tsfc<=1.2 - check engine manufacturer
 altitude_ci = 35000     ; %cruise altitude, ft
 altitude_fi = 0         ; % airfield alitude, ft
-passengers  = 200       ; %persons
+passengers  = 210       ; %persons
 crew        = 10        ; %persons
 baggage     = [50 4000] ; %lbs [allotment per person, additional cargo]
 loiter_dur  = 1.0       ; %hrs
