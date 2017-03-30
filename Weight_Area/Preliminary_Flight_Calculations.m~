@@ -13,7 +13,11 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 close all;
 clear all;
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% SELECT WORKING DIRECTORY
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+folder_name = uigetdir('C:\','Select Working Directory');
+cd(folder_name);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% INPUT VALUES
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -47,7 +51,7 @@ altitude_climbi = altitude_ci ; %ft, for now (see aircraft_mass.m)
 theta_app   = 3.04      ; %approach angle, deg
 
 % cruise parameters
-C_D0_c      = 0.025     ; % assumed (at cruise)
+C_D0_c      = 0.025      ; % assumed (at cruise)
 C_DR_c      = 0         ; % assumed (clean configuration at cruise)
 K1_c        = 1/(pi*AR*e); % induced drag correction factor
 K2_c        = 0         ; % viscous drag correction factor
@@ -60,13 +64,6 @@ carpet_y_lim = [0 1]    ;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%DO NOT MODIFY BELOW THIS POINT%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% SELECT WORKING DIRECTORY
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-folder_name = uigetdir('C:\','Select Working Directory');
-cd(folder_name);
-mkdir(Trial_Name)
-cd(Trial_Name)
 %% FUNCTION CALLING
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -99,7 +96,7 @@ answer = inputdlg(prompt,dlg_title,num_lines,defaultans);
 thrust_loading = str2num(answer{1});
 wing_loading = str2num(answer{2});
 plot(wing_loading,thrust_loading,'b.', 'MarkerSize', 20);
-print(sprintf('Carpet Plot %s', Trial_Name),'-dpng')
+print('Carpet_Plot','-dpng')
 
 %calculations
 [ s_ref, thrust ] = TS_converter( wing_loading, thrust_loading, W_TO );
@@ -107,9 +104,9 @@ print(sprintf('Carpet Plot %s', Trial_Name),'-dpng')
 disp(sprintf('%0.0f Thrust (lbf)', thrust));
 disp(sprintf('%0.0f Reference Area (ft^2)', s_ref));
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % OUTPUT TO TEXT FILE
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 text = sprintf('Preliminary Aircraft Design Calculations - %s.txt',...
     Trial_Name);
 fid = fopen(text,'w');
@@ -123,8 +120,7 @@ fprintf(fid, sprintf('%0.0f Empty Weight (lbm) \n \n', W_empty));
 fprintf(fid, sprintf('%0.0f Thrust (lbf) \n', thrust));
 fprintf(fid, sprintf('%0.0f Reference Area (ft^2) \n \n', s_ref));
 
-fprintf(fid, sprintf('-------------------------------------------------'));
-fprintf(fid, sprintf('\nInput Parameters: \n \n'));
+fprintf(fid, sprintf('Input Parameters: \n \n'));
 
 fprintf(fid, sprintf('%0.2f Cruise Mach Number\n', M_cruise)); 
 fprintf(fid, sprintf('%0.0f Range (Nm)\n', R)); 
@@ -135,22 +131,22 @@ fprintf(fid, sprintf('%0.0f Altitude_ci (ft) \n', altitude_ci));
 fprintf(fid, sprintf('%0.0f Altitude_fi (ft) \n', altitude_fi)); 
 fprintf(fid, sprintf('%0.0f Passengers \n', passengers)); 
 fprintf(fid, sprintf('%0.0f Crew \n', crew)); 
-fprintf(fid, sprintf('%0.0f Baggage (lbm) \n', baggage)); 
-fprintf(fid, sprintf('%0.2f Loiter Duration (hrs) \n \n', loiter_dur)); 
+fprintf(fid, sprintf('Baggage:  (lbm) \n', baggage)); 
+fprintf(fid, sprintf('Loiter Duration: %0.2f (hrs) \n \n', loiter_dur)); 
 
-fprintf(fid, sprintf('%0.1f Approach Velocity (knots) \n', V_approach)); 
-fprintf(fid, sprintf('%0.2f Stall Velocity (knots) \n', V_stall)); 
-fprintf(fid, sprintf('%0.2f Takeoff CL_max \n', Clmax_to)); 
-fprintf(fid, sprintf('%0.2f Land CL_max \n', Clmax_land)); 
-fprintf(fid, sprintf('%0.2f Climb Mach Number \n', M_climb)); 
-fprintf(fid, sprintf('%0.2f Rate Climb (ft/min) \n', rate_climb)); 
-fprintf(fid, sprintf('%0.2f Climb Altitude (ft) \n', altitude_climbi)); 
-fprintf(fid, sprintf('%0.2f Approach angle [theta] (deg)\n\n', theta_app)); 
+fprintf(fid, sprintf('Approach Velocity: %0.1f (knots) \n', V_approach)); 
+fprintf(fid, sprintf('Stall Velocity: %0.2f (knots) \n', V_stall)); 
+fprintf(fid, sprintf('Takeoff CL_max: %0.2f \n', Clmax_to)); 
+fprintf(fid, sprintf('Land CL_max: %0.2f \n', Clmax_land)); 
+fprintf(fid, sprintf('Climb Mach Number: %0.2f \n', M_climb)); 
+fprintf(fid, sprintf('Rate Climb: %0.2f (ft/min) \n', rate_climb)); 
+fprintf(fid, sprintf('Climb Altitude: %0.2f (ft) \n', altitude_climbi)); 
+fprintf(fid, sprintf('Approach angle [theta]: %0.2f (deg)\n \n', theta_app)); 
 
-fprintf(fid, sprintf('%0.3f Coefficient of Drag \n', C_D0_c)); 
-fprintf(fid, sprintf('%0.3f Coefficient of Residual Drag \n', C_DR_c)); 
-fprintf(fid, sprintf('%0.3f Induced Drag Correction [K1] \n', K1_c)); 
-fprintf(fid, sprintf('%0.3f Viscous Drag Correction [K2] \n', K2_c)); 
-fprintf(fid, sprintf('%0.3f Specific Heat Ratio [gamma] \n', gamma)); 
-fprintf(fid, sprintf('%0.1f TR \n', TR)); 
-fprintf(fid, sprintf('%0.1f Gravitational Constant (ft/s^2) \n', g)); 
+fprintf(fid, sprintf('Coefficient of Drag: %0.3f \n', C_D0_c)); 
+fprintf(fid, sprintf('Coefficient of Residual Drag: %0.3f \n', C_DR_c)); 
+fprintf(fid, sprintf('Induced Drag Correction [K1]: %0.3f \n', K1_c)); 
+fprintf(fid, sprintf('Viscous Drag Correction [K2]: %0.3f \n', K2_c)); 
+fprintf(fid, sprintf('Specific Heat Ratio [gamma]: %0.3f \n', gamma)); 
+fprintf(fid, sprintf('TR: %0.1f \n', TR)); 
+fprintf(fid, sprintf('Gravitational Constant: %0.1f (ft/s^2) \n', g)); 
