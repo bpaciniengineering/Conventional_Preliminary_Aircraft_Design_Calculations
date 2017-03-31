@@ -74,7 +74,7 @@ plot(WS, TW_takeoff1, 'b');
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Climb-performance
-dHdt = rate_climb;
+dHdt = rate_climb/60; % ft/s
 V_climb = (soundSpeed_climb*3.28084)*M_climb; % ft/s
 beta_climb = calculate_beta('climb', R, loiter_dur, M_climb, ...
     soundSpeed_climbi*M_climb, AR, e, C_D0_c+C_DR_c, tsfc);
@@ -133,7 +133,7 @@ area(WS, TW_takeoff1, 'FaceColor', 'b');
 % Stall
 line([WS_stall WS_stall],get(hax,'YLim'),'Color',[1 1 0]);
 % Climb
-%plot(WS, TW_climb, 'm'); % REQUIRED THRUST LOADING IS TOO HIGH
+plot(WS, TW_climb, 'm');
 % Cruise
 area(WS, TW_cruise, 'FaceColor', 'g');
 % Landing

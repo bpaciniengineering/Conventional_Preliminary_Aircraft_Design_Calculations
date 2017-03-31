@@ -41,9 +41,9 @@ Clmax_to    = 1.80      ; %assumed
 Clmax_land  = 2.10      ; %assumed
 L_takeoff   = 10500     ; %ft REQUIREMENT
 L_landing= L_takeoff*0.6; %ft REQUIREMENT
-M_climb     = M_cruise  ; %for now (see aircraft_mass.m)
-rate_climb  = 2400      ; %ft/min
-altitude_climbi = altitude_ci ; %ft, for now (see aircraft_mass.m)
+M_climb     = M_cruise*0.8  ; %for now (see aircraft_mass.m)
+rate_climb  = 3500      ; %ft/min
+altitude_climbi = 0     ; %ft, for now (see aircraft_mass.m)
 theta_app   = 3.04      ; %approach angle, deg
 
 % cruise parameters
@@ -63,10 +63,9 @@ carpet_y_lim = [0 1]    ;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% SELECT WORKING DIRECTORY
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-folder_name = uigetdir('C:\','Select Working Directory');
-cd(folder_name);
-mkdir(Trial_Name)
-cd(Trial_Name)
+%folder_name = uigetdir('C:\','Select Working Directory');
+%cd(folder_name);
+
 %% FUNCTION CALLING
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -106,6 +105,9 @@ print(sprintf('Carpet Plot %s', Trial_Name),'-dpng')
 
 disp(sprintf('%0.0f Thrust (lbf)', thrust));
 disp(sprintf('%0.0f Reference Area (ft^2)', s_ref));
+
+mkdir(Trial_Name)
+cd(Trial_Name)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % OUTPUT TO TEXT FILE
