@@ -8,7 +8,7 @@ function  aircraft_surfacearea(M_cruise, R, AR, e, tsfc, ...
     altitude_ci, altitude_fi, loiter_dur, altitude_climbi, V_approach, ...
     V_stall, Clmax_to, Clmax_land, L_takeoff, L_landing, M_climb, ...
     rate_climb, theta_app, C_D0_c, C_DR_c, K1_c, K2_c, gamma, TR, g, ...
-    carpet_x_lim, carpet_y_lim)
+    carpet_x_lim, carpet_y_lim, W_TO)
 
 altitude_c = altitude_ci*0.3048;
 altitude_climb = altitude_climbi*0.3048;
@@ -120,6 +120,21 @@ WS_landing = (L_landing - 50/tan(deg2rad(theta_app)))...
 %WS_landing = ((sigma * Clmax_land)/(79.4)) *(SL  - 50/tan(theta))
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Maximum and minimum load factor constraints (assume at cruise)
+beta_n = 1; % assume negligible fuel consumption in turn
+n_max = 2.1 + (24000/(W_TO+10000)); % from FAR 23.337
+n_max = n_max * 1.5; % safety factor
+if n_max > 3.8
+    n_max = 3.8;
+end
+n_min = -0.4 * n_max;
+
+TW_nmax = (beta_n/alpha_c)*(K1_c*n_max^2*WS/q_c + K2_c*n_max + ...
+    (C_D0_c+C_DR_c)./(beta_n*WS/q_c));
+TW_nmin = (beta_n/alpha_c)*(K1_c*n_min^2*WS/q_c + K2_c*n_min + ...
+    (C_D0_c+C_DR_c)./(beta_n*WS/q_c));
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Plot everything on carpet plot
 
 % plot rectangles first so they're in back
@@ -133,12 +148,15 @@ area(WS, TW_takeoff1, 'FaceColor', 'b');
 % Stall
 line([WS_stall WS_stall],get(hax,'YLim'),'Color',[1 1 0]);
 % Climb
-plot(WS, TW_climb, 'm');
+area(WS, TW_climb, 'FaceColor', 'm');
 % Cruise
 area(WS, TW_cruise, 'FaceColor', 'g');
 % Landing
 line([WS_landing WS_landing], get(hax,'YLim'),'Color',[0 1 1]);
 alpha(0.5); % transparency
+% Load Factors
+plot(WS, TW_nmax, 'r.');
+plot(WS, TW_nmin, 'r--'); % thrust loading should be below this line
 
 title('Constraint Plane (T/W - W/S)');
 xlabel('Wing Loading [W_g/S], lb/ft^2');

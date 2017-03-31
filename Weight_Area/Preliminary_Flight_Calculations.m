@@ -45,6 +45,8 @@ M_climb     = M_cruise*0.8  ; %for now (see aircraft_mass.m)
 rate_climb  = 3500      ; %ft/min
 altitude_climbi = 0     ; %ft, for now (see aircraft_mass.m)
 theta_app   = 3.04      ; %approach angle, deg
+n_max       = 6         ; % maximum load factor (FAR 23)
+n_min       = -0.5      ; % minimum load factor (FAR 23)
 
 % cruise parameters
 C_D0_c      = 0.025     ; % assumed (at cruise)
@@ -83,7 +85,7 @@ disp(sprintf('%0.0f Empty Weight (lbm)', W_empty));
 aircraft_surfacearea(M_cruise, R, AR, e, tsfc, altitude_ci, altitude_fi,...
     loiter_dur, altitude_climbi, V_approach, V_stall, Clmax_to,...
     Clmax_land, L_takeoff, L_landing, M_climb, rate_climb, theta_app,...
-    C_D0_c, C_DR_c, K1_c, K2_c, gamma, TR, g, carpet_x_lim, carpet_y_lim);
+    C_D0_c, C_DR_c, K1_c, K2_c, gamma, TR, g, carpet_x_lim, carpet_y_lim, W_TO);
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
