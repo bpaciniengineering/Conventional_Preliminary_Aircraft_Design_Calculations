@@ -19,7 +19,7 @@ clear all;
 Trial_Name  = 'Trial 1' ;
 Description = ''        ;
 % ON/OFF SELECTORS
-output      = 1         ; %1/0 for output files
+output      = 0         ; %1/0 for output files
 weight      = 1         ;
 carpet_plot = 1         ; %1/0 for carpet plot
 takeoff_length = 1      ; %1/0 - requires weight & carpet_plot 
@@ -118,10 +118,14 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% TAKEOFF DISTANCE
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+try
 if takeoff_length == 1
 [ TOFL , index] = TO_distance(V_stall, Clmax_to, s_ref, ... 
     Thrust, W_TO, Number_Engines, altitude_fi);
 disp(sprintf('%0.0f Required Takeoff Eield Length (ft)', TOFL));
+end
+catch
+    error('Please Enable both Weight and Carpet Plot Calculations')
 end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % OUTPUT TO TEXT FILE

@@ -55,7 +55,11 @@ w = linspace(1, weight_max, 1000);
 raymer = @(wto) wto*(1-(1.02*wto^(-0.06))) - ...
     (wto- (wto*weight_ratio))/0.94 - W_pay;
 x0 = [1 weight_max];
-W_TO = fzero(raymer, x0);
+try
+    W_TO = fzero(raymer, x0);
+catch
+    error('Aircraft Weight not within specified range');
+end
 if graph == 1
     figure()
     hold on;
