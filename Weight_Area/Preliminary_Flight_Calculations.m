@@ -21,18 +21,18 @@ Trial_Name  = 'Trial 1' ;
 Description = ''        ;
 
 M_cruise    = 0.85      ;
-R           = 6500      ; %nm
+R           = 2500      ; %nm
 AR          = 8.1       ; %assume about 8                       %ESTIMATE
 e           = 0.8       ; %Oswald efficiency factor, assume 0.8 (Raymer 92)
 tsfc        = 0.5       ; %0.45<=tsfc<=1.2 - check engine manufacturer
 altitude_ci = 35000     ; %cruise altitude, ft
 altitude_fi = 0000      ; %airfield alitude, ft
-passengers  = 210       ; %persons
-crew        = 5 + 3     ; %persons
-baggage     = [40 4000] ; %lbs [allotment per person, additional cargo]
+passengers  = 8         ; %persons
+crew        = 2         ; %persons
+baggage     = [0 1000] ; %lbs [allotment per person, additional cargo]
 loiter_dur  = 0         ; %hrs
 
-weight_max  = 1e6       ; %max of weight range
+weight_max  = 1e5       ; %max of weight range
 graph       = 1         ; %1/0 for plot on/off
 
 V_approach  = 150       ; %knots
@@ -41,7 +41,7 @@ Clmax_to    = 1.80      ; %assumed
 Clmax_land  = 2.10      ; %assumed
 L_takeoff   = 10500     ; %ft REQUIREMENT
 L_landing= L_takeoff*0.6; %ft REQUIREMENT
-M_climb     = M_cruise*0.8  ; %for now (see aircraft_mass.m)
+M_climb     = M_cruise*0.8; %for now (see aircraft_mass.m)
 rate_climb  = 3500      ; %ft/min
 altitude_climbi = 0     ; %ft, for now (see aircraft_mass.m)
 theta_app   = 3.04      ; %approach angle, deg
@@ -62,14 +62,7 @@ carpet_y_lim = [0 1]    ;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%DO NOT MODIFY BELOW THIS POINT%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% SELECT WORKING DIRECTORY
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%folder_name = uigetdir('C:\','Select Working Directory');
-%cd(folder_name);
-
 %% FUNCTION CALLING
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Take-off Weight
 [W_TO, W_fuel, W_empty] = aircraft_mass(M_cruise, R, AR, e, C_D0_c, ...
@@ -108,12 +101,12 @@ print(sprintf('Carpet Plot %s', Trial_Name),'-dpng')
 disp(sprintf('%0.0f Thrust (lbf)', thrust));
 disp(sprintf('%0.0f Reference Area (ft^2)', s_ref));
 
-mkdir(Trial_Name)
-cd(Trial_Name)
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % OUTPUT TO TEXT FILE
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+mkdir(Trial_Name)
+cd(Trial_Name)
+
 text = sprintf('Preliminary Aircraft Design Calculations - %s.txt',...
     Trial_Name);
 fid = fopen(text,'w');
