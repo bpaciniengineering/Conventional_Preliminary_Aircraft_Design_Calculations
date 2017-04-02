@@ -90,6 +90,7 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Surface Area
 if carpet_plot == 1
+try
 aircraft_carpetplot(M_cruise, R, AR, e, tsfc, altitude_ci, altitude_fi,...
     loiter_dur, altitude_climbi, V_approach, V_stall, Clmax_to,...
     Clmax_land, L_takeoff, L_landing, M_climb, rate_climb, theta_app,...
@@ -114,6 +115,10 @@ plot(wing_loading,thrust_loading,'b.', 'MarkerSize', 20);
 
 disp(sprintf('%0.0f Thrust (lbf)', thrust));
 disp(sprintf('%0.0f Reference Area (ft^2)', s_ref));
+catch
+    errordlg('Please enable aircraft weight');
+    error('Please enable aircraft weight');
+end
 end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% TAKEOFF DISTANCE
@@ -125,7 +130,8 @@ if takeoff_length == 1
 disp(sprintf('%0.0f Required Takeoff Eield Length (ft)', TOFL));
 end
 catch
-    error('Please Enable both Weight and Carpet Plot Calculations')
+    errordlg('Please enable both weight and Carpet Plot calculations')
+    error('Please enable both weight and Carpet Plot calculations')
 end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % OUTPUT TO TEXT FILE

@@ -58,7 +58,8 @@ x0 = [1 weight_max];
 try
     W_TO = fzero(raymer, x0);
 catch
-    error('Aircraft Weight not within specified range');
+    errordlg('Aircraft weight not within specified range');
+    error('Aircraft weight not within specified range');
 end
 if graph == 1
     figure()
