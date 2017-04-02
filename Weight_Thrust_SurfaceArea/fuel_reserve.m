@@ -1,60 +1,50 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Jan Bernhard                                                          %%
+%% Jan Bernhard & Bernardo Pacini                                        %%
 %% MAE 332 - Aircraft Design                                             %%
 %% Reserved Fuel Calculations                                            %%
 %% Feb. 23, 2017 Thur                                                    %%
 %% Modified: xx/xx/xxxx                                                  %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-function [W_reservedFuel] = fuelReserve(WTO,AR,tsfc,rangeCondition,M_cruise,...
-    altCruise)
+function [weight_ratio] = fuel_reserve(AR,tsfc,Reserve_R,...
+    M_cruise, altitude_ci, e, C_D0, C_DR)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% INITIAL Calculations
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % calculate cruise speed
-[airDens, airPres, temp, soundSpeed] = Atmos(altCruise); %kg/m^3 N/m^2 K m/s
+[airDens, airPres, temp, soundSpeed] = Atmos(altitude_ci);%kg/m^3 N/m^2 K m/s
 soundSpeed = soundSpeed*2.23694;    %meter/sec -> mph
 V_cruise = M_cruise*(soundSpeed);   %miles/hr
-R = rangeCondition*1.15078;         %nm -> m
-loiter_dur = .75;                   %hours
-
+R = Reserve_R*1.15078;         %nm -> m
+loiter_dur = 0.75;                  %hours
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Ratio Calculations
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Failed landing approach.
-ratio_landing_1 = 0.9725;  
+ratio_landing_1 = calculate_beta('land', R, loiter_dur, 0, ...
+    0, AR, e, C_D0+C_DR, tsfc);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Start through
-ratio_startup = 0.9725;
+ratio_startup = calculate_beta('takeoff', R, loiter_dur, 0, ...
+    0, AR, e, C_D0+C_DR, tsfc);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Cruise climb
-if M_cruise < 1
-    ratio_climb = 1.0065 - 0.0325*M_cruise;                     %ESTIMATE
-else
-    ratio_climb = 0.991 - 0.007*M_cruise - 0.01*M_cruise^2;
-end
+ratio_climb = calculate_beta('climb', R, loiter_dur, M_cruise, ...
+    V_cruise, AR, e, C_D0+C_DR, tsfc);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Cruise Out
-if M_cruise < 1
-    L_D = AR + 10;                                              %M<1
-else
-    L_D = 11/sqrt(M);                                           %M>1
-end
-% Breguet Range Equation
-% R = (V/tsfc) * (L_D) * ln(Wi/Wf) %lbfuel/h/lbt
-ratio_CO = 1/(exp(R*((tsfc)/(V_cruise))/(L_D)));
+ratio_CO = calculate_beta('cruise', R, loiter_dur, M_cruise, ...
+    V_cruise, AR, e, C_D0+C_DR, tsfc);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Loiter
-E = loiter_dur/(3600);
-L_D_max = L_D / 0.94;
-ratio_Loiter = 1/(exp((E * tsfc)/(L_D_max)));
+ratio_Loiter = calculate_beta('loiter', R, loiter_dur, 0, ...
+    0, AR, e, C_D0+C_DR, tsfc);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Landing
-ratio_landing_2 = 0.9725; 
+ratio_landing_2 = calculate_beta('land', R, loiter_dur, 0, ...
+    0, AR, e, C_D0+C_DR, tsfc);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Total Ratio
 weight_ratio = ratio_landing_1 * ratio_startup * ratio_climb * ratio_CO...
     * ratio_Loiter * ratio_landing_2;
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-W_reservedFuel = (WTO - (WTO*weight_ratio));
 end

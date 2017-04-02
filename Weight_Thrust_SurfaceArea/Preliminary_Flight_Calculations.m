@@ -1,5 +1,5 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Bernardo Pacini                                                       %%
+%% Bernardo Pacini and Nathan Wei and Raj Balaji                         %%
 %% MAE 332 - Aircraft Design                                             %%
 %% Preliminary Design Calculations                                       %%
 %% Feb. 27, 2017 Thur                                                    %%
@@ -7,21 +7,27 @@
 %% Description: This code will output preliminary aircraft design        %%
 %% calculations to a .txt file and a carpet plot with constraints        %%
 %%                                                                       %%
-%% Dependencies:| aircraft_mass.m | aircraft_surfacearea.m | Atmos.m |   %%
+%% Dependencies:| aircraft_weight.m | aircraft_carpetplot.m | Atmos.m |  %%
 %%              | calculate_alpha.m | calculate_beta.m | TS_converter.m |%% 
 %%              | convert_to_imperial.m | dynamic_pressure.m |           %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 close all;
 clear all;
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% INPUT VALUES
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Trial_Name  = 'Trial 1' ;
 Description = ''        ;
+% ON/OFF SELECTORS
+output      = 1         ; %1/0 for output files
+weight      = 1         ;
+carpet_plot = 1         ; %1/0 for carpet plot
+takeoff_length = 1      ; %1/0 - requires weight & carpet_plot 
 
-M_cruise    = 0.85      ;
+% airfract requirements
+M_cruise    = 0.89      ;
 R           = 2500      ; %nm
+Reserve_R   = 100       ; %nm
 AR          = 8.1       ; %assume about 8                       %ESTIMATE
 e           = 0.8       ; %Oswald efficiency factor, assume 0.8 (Raymer 92)
 tsfc        = 0.5       ; %0.45<=tsfc<=1.2 - check engine manufacturer
@@ -33,8 +39,9 @@ baggage     = [0 1000] ; %lbs [allotment per person, additional cargo]
 loiter_dur  = 0         ; %hrs
 
 weight_max  = 1e5       ; %max of weight range
-graph       = 1         ; %1/0 for plot on/off
+graph       = 0         ; %1/0 for plot on/off
 
+% flight requirements
 V_approach  = 150       ; %knots
 V_stall = V_approach/1.3; %knots, based on approach speed estimate
 Clmax_to    = 1.80      ; %assumed
@@ -59,27 +66,35 @@ g           = 32.174    ; %ft/s^2
 
 carpet_x_lim = [50 150] ;
 carpet_y_lim = [0 1]    ;
+
+% takeoff calculations
+Thrust      = 10000;   %lbf/engine
+Number_Engines = 2;
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%DO NOT MODIFY BELOW THIS POINT%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% FUNCTION CALLING
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Take-off Weight
-[W_TO, W_fuel, W_empty] = aircraft_mass(M_cruise, R, AR, e, C_D0_c, ...
+if weight == 1
+[W_TO, W_fuel, W_empty] = aircraft_weight(M_cruise, R, AR, e, C_D0_c, ...
     C_DR_c, tsfc, altitude_ci, passengers, crew, baggage, loiter_dur,...
-    weight_max, graph);
+    Reserve_R, weight_max, graph);
 
 disp(sprintf('%0.0f Takeoff Weight (lbm)', W_TO)); 
 disp(sprintf('%0.0f Fuel Weight (lbm)', W_fuel));
 disp(sprintf('%0.0f Empty Weight (lbm)', W_empty));
-
+end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Surface Area
-aircraft_surfacearea(M_cruise, R, AR, e, tsfc, altitude_ci, altitude_fi,...
+if carpet_plot == 1
+aircraft_carpetplot(M_cruise, R, AR, e, tsfc, altitude_ci, altitude_fi,...
     loiter_dur, altitude_climbi, V_approach, V_stall, Clmax_to,...
     Clmax_land, L_takeoff, L_landing, M_climb, rate_climb, theta_app,...
-    C_D0_c, C_DR_c, K1_c, K2_c, gamma, TR, g, carpet_x_lim, carpet_y_lim, W_TO);
-
+    C_D0_c, C_DR_c, K1_c, K2_c, gamma, TR, g, carpet_x_lim, ...
+    carpet_y_lim, W_TO);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% THRUST AND SURFACE AREA VALUES
@@ -93,34 +108,48 @@ answer = inputdlg(prompt,dlg_title,num_lines,defaultans);
 thrust_loading = str2num(answer{1});
 wing_loading = str2num(answer{2});
 plot(wing_loading,thrust_loading,'b.', 'MarkerSize', 20);
-print(sprintf('Carpet Plot %s', Trial_Name),'-dpng')
 
 %calculations
 [ s_ref, thrust ] = TS_converter( wing_loading, thrust_loading, W_TO );
 
 disp(sprintf('%0.0f Thrust (lbf)', thrust));
 disp(sprintf('%0.0f Reference Area (ft^2)', s_ref));
-
+end
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% TAKEOFF DISTANCE
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+if takeoff_length == 1
+[ TOFL , index] = TO_distance(V_stall, Clmax_to, s_ref, ... 
+    Thrust, W_TO, Number_Engines, altitude_fi);
+disp(sprintf('%0.0f Required Takeoff Eield Length (ft)', TOFL));
+end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % OUTPUT TO TEXT FILE
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-mkdir(Trial_Name)
-cd(Trial_Name)
+if output == 1
+folder_name = uigetdir('C:\','Select Working Directory');
+mkdir(sprintf('%s/%s', folder_name, Trial_Name));
 
 text = sprintf('Preliminary Aircraft Design Calculations - %s.txt',...
     Trial_Name);
-fid = fopen(text,'w');
+fid = fopen(sprintf('%s/%s/%s',folder_name, Trial_Name, text),'w');
 fprintf(fid, sprintf('Preliminary Aircraft Design Calculations- %s \n',...
     Trial_Name));
 fprintf(fid, sprintf('Description: %s \n \n',Description));
-
+if weight == 1
 fprintf(fid, sprintf('%0.0f Takeoff Weight (lbm) \n', W_TO)); 
 fprintf(fid, sprintf('%0.0f Fuel Weight (lbm) \n', W_fuel));
 fprintf(fid, sprintf('%0.0f Empty Weight (lbm) \n \n', W_empty));
+end
+if carpet_plot == 1
 fprintf(fid, sprintf('%0.0f Thrust (lbf) \n', thrust));
 fprintf(fid, sprintf('%0.0f Reference Area (ft^2) \n \n', s_ref));
+end
+if takeoff_length == 1
+fprintf(fid, sprintf('%0.0f Takeoff Eield Length (ft) \n \n',TOFL));
+end
 
-fprintf(fid, sprintf('-------------------------------------------------'));
+fprintf(fid, sprintf('------------------------------------------------'));
 fprintf(fid, sprintf('\nInput Parameters: \n \n'));
 
 fprintf(fid, sprintf('%0.2f Cruise Mach Number\n', M_cruise)); 
@@ -151,3 +180,9 @@ fprintf(fid, sprintf('%0.3f Viscous Drag Correction [K2] \n', K2_c));
 fprintf(fid, sprintf('%0.3f Specific Heat Ratio [gamma] \n', gamma)); 
 fprintf(fid, sprintf('%0.1f TR \n', TR)); 
 fprintf(fid, sprintf('%0.1f Gravitational Constant (ft/s^2) \n', g)); 
+
+if carpet_plot == 1
+print(sprintf('%s/%s/Carpet Plot %s', folder_name, Trial_Name, ...
+Trial_Name),'-dpng')
+end
+end

@@ -4,13 +4,14 @@
 %% Preliminary Design Calculations                                       %%
 %% Feb. 23, 2017 Thur                                                    %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-function [W_TO,W_fuel, W_empty] = aircraft_mass(M_cruise, R, AR, e, C_D0, C_DR, tsfc,...
-    altitude, passengers, crew, baggage, loiter_dur, weight_max, graph)
+function [W_TO,W_fuel, W_empty] = aircraft_weight(M_cruise, R, AR, e, ...
+    C_D0, C_DR, tsfc, altitude_ci, passengers, crew, baggage, loiter_dur,...
+    Reserve_R, weight_max, graph)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% INITIAL Calculations
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-altitude = altitude*0.3048;
-[airDens, airPres, temp, soundSpeed] = Atmos(altitude);%kg/m^3 N/m^2 K m/s
+altitude_ci = altitude_ci*0.3048;
+[airDens, airPres, temp, soundSpeed] = Atmos(altitude_ci);%kg/m^3 N/m^2 K m/s
 % Convert values from SI to Imperial
 [airDens, airPres, temp, soundSpeed] = ...
     convert_to_imperial(airDens, airPres, temp, soundSpeed);
@@ -52,7 +53,7 @@ weight_ratio = ratio_startup* ratio_climb * ratio_CO * ...
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 w = linspace(1, weight_max, 1000);
 raymer = @(wto) wto*(1-(1.02*wto^(-0.06))) - ...
-    (wto - (wto*weight_ratio))/0.94 - W_pay;
+    (wto- (wto*weight_ratio))/0.94 - W_pay;
 x0 = [1 weight_max];
 W_TO = fzero(raymer, x0);
 if graph == 1
@@ -65,7 +66,7 @@ if graph == 1
     ylabel('N/A');
 end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% FINAL WEIGHT VALUES
+%% FINAL WEIGHT VALUES
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 W_fuel = (W_TO - (W_TO*weight_ratio))/0.94; % 0.94 is trapped fuel
 W_empty = W_TO - W_fuel - W_pay;
