@@ -166,7 +166,7 @@ fprintf(fid, sprintf('%0.2f Cruise Mach Number\n', M_cruise));
 fprintf(fid, sprintf('%0.0f Range (Nm)\n', R)); 
 fprintf(fid, sprintf('%0.1f Aspect Ratio\n', AR)); 
 fprintf(fid, sprintf('%0.2f Oswald Efficiency Factor\n', e)); 
-fprintf(fid, sprintf('%0.0f TSFC\n', tsfc)); 
+fprintf(fid, sprintf('%0.3f TSFC\n', tsfc)); 
 fprintf(fid, sprintf('%0.0f Altitude_ci (ft) \n', altitude_ci)); 
 fprintf(fid, sprintf('%0.0f Altitude_fi (ft) \n', altitude_fi)); 
 fprintf(fid, sprintf('%0.0f Passengers \n', passengers)); 
