@@ -136,7 +136,6 @@ TW_nmin = (beta_n/alpha_c)*(K1_c*n_min^2*WS/q_c + K2_c*n_min + ...
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Plot everything on carpet plot
-%{
 % plot rectangles first so they're in back
 rectangle('Position', [WS_landing carpet_y_lim(1) ...
     (carpet_x_lim(2)) carpet_y_lim(2)], 'FaceColor', [0 1 1]);
@@ -163,7 +162,7 @@ xlabel('Wing Loading [W_g/S], lb/ft^2');
 ylabel('Thrust Loading [T_0/W_g]');
 xlim(carpet_x_lim)
 ylim(carpet_y_lim)
-%}
+
 xlim(carpet_x_lim);
 ylim(carpet_y_lim);
 % Takeoff
