@@ -28,6 +28,7 @@ M_lo = Vlo * 0.00149984; %kt -> Mach
 %             http://adg.stanford.edu/aa241/performance/takeoff.html
 
 % Calculate lift of thrust. 
+Thrust = Thrust*number_engines;
 T_vlo = 0.75*Thrust; %Estimate on basis of thrust fit for high bypass engines.
 
 
