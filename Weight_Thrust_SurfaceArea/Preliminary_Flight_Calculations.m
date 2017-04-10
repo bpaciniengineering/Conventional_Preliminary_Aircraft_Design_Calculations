@@ -22,7 +22,7 @@ Description = ''        ;
 output      = 0         ; %1/0 for output files
 weight      = 1         ;
 carpet_plot = 1         ; %1/0 for carpet plot
-takeoff_length = 1      ; %1/0 - requires weight & carpet_plot 
+takeoff_length = 0      ; %1/0 - requires weight & carpet_plot 
 
 % airfract requirements
 M_cruise    = 0.89      ;
@@ -46,8 +46,8 @@ V_approach  = 150       ; %knots
 V_stall = V_approach/1.3; %knots, based on approach speed estimate
 Clmax_to    = 1.80      ; %assumed
 Clmax_land  = 2.10      ; %assumed
-L_takeoff   = 10500     ; %ft REQUIREMENT
-L_landing= L_takeoff*0.6; %ft REQUIREMENT
+L_takeoff   = 4000     ; %ft REQUIREMENT
+L_landing= 3600; %ft REQUIREMENT
 M_climb     = M_cruise*0.8; %for now (see aircraft_mass.m)
 rate_climb  = 3500      ; %ft/min
 altitude_climbi = 0     ; %ft, for now (see aircraft_mass.m)
@@ -64,7 +64,7 @@ gamma       = 1.4       ; % specific heat ratio cp/cv, for air
 TR          = 1         ; % assumed
 g           = 32.174    ; %ft/s^2
 
-carpet_x_lim = [50 150] ;
+carpet_x_lim = [50 100] ;
 carpet_y_lim = [0 1]    ;
 
 % takeoff calculations
