@@ -23,9 +23,9 @@ altitude_f = altitude_fi*0.3048;
 R = R*1.15078;
 
 % 84 degrees Fahrenheit field conditions (for midterm)
-airDens_f       = 1.1644;   % kg/m^3
-temp_f          = 28.889;   % degrees C
-soundSpeed_f    = sqrt(1.4*287.1*(temp_f+273.15));
+%airDens_f       = 1.1644;   % kg/m^3
+%temp_f          = 28.889;   % degrees C
+%soundSpeed_f    = sqrt(1.4*287.1*(temp_f+273.15));
 
 % Convert values from SI to Imperial
 [airDens_ci, airPres_ci, temp_ci, soundSpeed_ci] = ...
@@ -65,7 +65,7 @@ index = (-28.43 + sqrt(28.43^2 - 4*(857.4-L_takeoff)*0.0185))/(2*0.0185);
 
 TW_takeoff1 = WS / (sigma*Clmax_to*index);
 %TW_takeoff2 = WS / (sigma*Clmax_to*index2);
-plot(WS, TW_takeoff1, 'b');
+%plot(WS, TW_takeoff1, 'b');
 %plot(WS, TW_takeoff2, 'c--');
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -136,7 +136,7 @@ TW_nmin = (beta_n/alpha_c)*(K1_c*n_min^2*WS/q_c + K2_c*n_min + ...
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Plot everything on carpet plot
-
+%{
 % plot rectangles first so they're in back
 rectangle('Position', [WS_landing carpet_y_lim(1) ...
     (carpet_x_lim(2)) carpet_y_lim(2)], 'FaceColor', [0 1 1]);
@@ -163,5 +163,27 @@ xlabel('Wing Loading [W_g/S], lb/ft^2');
 ylabel('Thrust Loading [T_0/W_g]');
 xlim(carpet_x_lim)
 ylim(carpet_y_lim)
+%}
+xlim(carpet_x_lim);
+ylim(carpet_y_lim);
+% Takeoff
+plot(WS, TW_takeoff1, 'b');
+% Stall
+line([WS_stall WS_stall],get(hax,'YLim'),'Color',[1 1 0]);
+% Climb
+plot(WS, TW_climb, 'm');
+% Cruise
+plot(WS, TW_cruise, 'g');
+% Landing
+line([WS_landing WS_landing], get(hax,'YLim'),'Color',[0 1 1]);
+%alpha(0.5); % transparency
+% Load Factors
+plot(WS, TW_nmax, 'r-.');
+plot(WS, TW_nmin, 'r--'); % thrust loading should be below this line
+
+title('Constraint Plane (T/W - W/S)');
+xlabel('Wing Loading [W_g/S], lb/ft^2');
+ylabel('Thrust Loading [T_0/W_g]');
+legend('Takeoff','Stall Velocity','Climb','Cruise','Landing','n_{max}','n_{min}');
 end
 
