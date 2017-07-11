@@ -2,16 +2,19 @@
 %% Bernardo Pacini                                                       %%
 %% MAE 332 - Aircraft Design                                             %%
 %% Preliminary Design Calculations                                       %%
-%% Feb. 23, 2017 Thur                                                    %%
+%% Feb. 23, 2017 Thur      
+%% Dependencies: | Atmos.m | convert_to_imperial.m | calculate_beta.m |
+%% Modified 07/02/2017 by Leif Fredericks
+%% Aircraft Weight
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function [W_TO,W_fuel, W_empty] = aircraft_weight(M_cruise, R, AR, e, ...
     C_D0, C_DR, tsfc, altitude_ci, passengers, crew, baggage, loiter_dur,...
-    Reserve_R, weight_max, graph)
+    Reserve_R, weight_max, graph, LD, LDC)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% INITIAL Calculations
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 altitude_ci = altitude_ci*0.3048;
-[airDens, airPres, temp, soundSpeed] = Atmos(altitude_ci);%kg/m^3 N/m^2 K m/s
+[airDens, airPres, temp, soundSpeed] = Atmos(altitude_ci);
 % Convert values from SI to Imperial
 [airDens, airPres, temp, soundSpeed] = ...
     convert_to_imperial(airDens, airPres, temp, soundSpeed);
@@ -27,23 +30,23 @@ W_pay = (passengers+crew)*(195) + (passengers+crew)*baggage(1) + baggage(2);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Startup and Take-off
 ratio_startup = calculate_beta('takeoff', R, loiter_dur, 0, ...
-    0, AR, e, C_D0+C_DR, tsfc);
+    0, AR, e, C_D0+C_DR, tsfc, LD, LDC);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Acceleration and Climb
 ratio_climb = calculate_beta('climb', R, loiter_dur, M_cruise, ...
-    V_cruise, AR, e, C_D0+C_DR, tsfc);
+    V_cruise, AR, e, C_D0+C_DR, tsfc, LD, LDC);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Cruise Out
 ratio_CO = calculate_beta('cruise', R, loiter_dur, M_cruise, ...
-    V_cruise, AR, e, C_D0+C_DR, tsfc);
+    V_cruise, AR, e, C_D0+C_DR, tsfc, LD, LDC);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Loiter
 ratio_Loiter = calculate_beta('loiter', R, loiter_dur, 0, ...
-    0, AR, e, C_D0+C_DR, tsfc);
+    0, AR, e, C_D0+C_DR, tsfc, LD, LDC);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Landing
 ratio_landing = calculate_beta('land', R, loiter_dur, 0, ...
-    0, AR, e, C_D0+C_DR, tsfc);
+    0, AR, e, C_D0+C_DR, tsfc, LD, LDC);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Total Ratio
 weight_ratio = ratio_startup* ratio_climb * ratio_CO * ...
