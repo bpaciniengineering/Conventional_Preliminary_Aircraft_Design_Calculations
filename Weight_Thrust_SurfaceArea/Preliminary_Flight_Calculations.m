@@ -36,12 +36,12 @@ h_b         = 0.22      ; % height to span ratio (height is vertical
                           % distance between wings) for BOX WING, else 0
 e           = 0.8       ; % Oswald efficiency factor, assume 0.8(Raymer 92)
 
-        % do not modify this conditional
-        if box_wing == 1
-             e   = 0.8 * (0.44 + 2.219* (h_b)) / (0.44 + 0.9594*(h_b));
+% do not modify this conditional
+if box_wing == 1
+    e   = 0.8 * (0.44 + 2.219* (h_b)) / (0.44 + 0.9594*(h_b));
              % http://www.fzt.haw-hamburg.de/pers/Scholz/Airport2030/
              % Airport2030_PUB_DLRK_11-09-27.pdf
-        end
+end
 
 tsfc        = 0.5       ; % 0.45<=tsfc<=1.2 - check engine manufacturer
 Clmax_to    = 1.80      ; % assumed: ESTIMATE then ITERATE
@@ -137,7 +137,7 @@ disp(sprintf('%0.0f Takeoff Weight (lbm)', W_TO));
 disp(sprintf('%0.0f Fuel Weight (lbm)', W_fuel));
 disp(sprintf('%0.0f Empty Weight (lbm)', W_empty));
 end
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%     HERE
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Surface Area
 if carpet_plot == 1
 try
